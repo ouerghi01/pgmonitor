@@ -5,10 +5,11 @@ import json
 import os
 import time
 from multiprocessing import Event, Process, Manager,Queue
-import signal
-import multiprocessing
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEvent, PatternMatchingEventHandler
+import  watchdog
 import getpass
-
+import subprocess
 
 def run_performance_test():
     bash_script_path = 'ProducerConsumer/pg_activity.sh'
@@ -23,7 +24,6 @@ def run_performance_test():
     except subprocess.CalledProcessError as e:
         print(e.stderr)
         exit(1)
-    start = time.time()
     try:
         result = subprocess.Popen([bash_script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         stdout, stderr = result.communicate()
@@ -36,68 +36,81 @@ def run_performance_test():
     except subprocess.CalledProcessError as e:
         print(e.stderr)
         exit(1)
-    end = time.time()
-    execution_time = end - start
-    print(f"Execution time: {execution_time:.2f} seconds")
+    
 
 
-def Producer_Data_Monitoring(event_stop, temp_filename):
-    producer = KafkaProducer(
-        bootstrap_servers='localhost:9092',
-        value_serializer=lambda v: json.dumps(v).encode('utf-8')
-    )
-
-    last_position = 0
-    while not event_stop.is_set():
+class Handler(PatternMatchingEventHandler):
+    def __init__(self, event_stop):
+        PatternMatchingEventHandler.__init__(self, patterns=['*.csv'], ignore_directories=True, case_sensitive=False)
+        self.producer=KafkaProducer(
+            bootstrap_servers='localhost:9092',
+            value_serializer=lambda v: json.dumps(v).encode('utf-8')
+        )
+        self.event_stop = event_stop
+        self.temp_filename_csv = r"./ProducerConsumer/Pg_activity_Data/activities.csv"
+        self.last_position = 0
+        self.skip_header = False
+        super().__init__()
+    def on_modified(self, event) -> None:
+        print(f"Event type: {event.event_type}  path : {event.src_path}")
+        if event.src_path==self.temp_filename_csv:
+           self.process_event(event)
+       
+    def process_event(self, event):
         try:
-            with open(temp_filename, 'r') as f:
-                f.seek(last_position)
-                header_skipped = False
-                while not event_stop.is_set():
-                    line = f.readline()
-                    if not line:
-                        break  # Exit if no more lines
+          with open(event.src_path, 'r') as f:
+             print(f"from producer  Processing file: {event.src_path}")
+             f.seek(0,2)
+             print(f"Last position: {self.last_position}")
+             while not self.event_stop.is_set():
+                line = f.readline()
+                if not line:
+                    time.sleep(0.01)
+                    break
+                if line.strip():
+                  if not self.skip_header:
+                    self.skip_header = True  
+                    continue
+                  if line.startswith("*") or "uptime" in line or "Global:" in line:
+                    continue
 
-                    last_position = f.tell()
+                  parts = line.strip().split(';')
+                  if len(parts) >= 14:
+                     record = {
+                        "datetimeutc": parts[0].strip('"'),
+                        "pid": parts[1].strip('"'),
+                        "database": parts[2].strip('"'),
+                        "appname": parts[3].strip('"'),
+                        "user": parts[4].strip('"'),
+                        "client": parts[5].strip('"'),
+                        "cpu": parts[6].strip('"'),
+                        "memory": parts[7].strip('"'),
+                        "read": parts[8].strip('"'),
+                        "write": parts[9].strip('"'),
+                        "duration": parts[10].strip('"'),
+                        "wait": parts[11].strip('"'),
+                        "io_wait": parts[12].strip('"'),
+                        "state": parts[13].strip('"'),
+                        "query": ";".join(parts[14:]).strip('"'),
+                    }
+                     self.producer.send(topic='db-monitoring', key=f"{random.randrange(999)}".encode(), value=record)
+                     self.last_position +=1  # Update the last position for next reading.
+                time.sleep(1)
+        except FileNotFoundError as e:
+            print(f"Error: {e}")
+            self.event_stop.set()
+        
+def Producer_Data_Monitoring(event_stop, temp_filename):
+    event_handler = Handler(event_stop)
+    observer = watchdog.observers.Observer()
+    observer.schedule(event_handler, path=temp_filename, recursive=False)
+    observer.start()
+    try:
+        while observer.is_alive():
+            observer.join(1)
+    except KeyboardInterrupt:
+        event_stop.set()
+        observer.stop()
+        event_handler.close()
+    observer.join()
 
-                    if line.strip():
-                        if not header_skipped:
-                            header_skipped = True  # Skip the header line
-                            continue
-
-                        # Skip non-data lines
-                        if line.startswith("*") or "uptime" in line or "Global:" in line:
-                            continue
-
-                        # Split the line by semicolon, handling quoted fields
-                        parts = line.strip().split(';')
-                        if len(parts) >= 14:  # Ensure there are enough fields
-                            record = {
-                                "datetimeutc": parts[0].strip('"'),
-                                "pid": parts[1].strip('"'),
-                                "database": parts[2].strip('"'),
-                                "appname": parts[3].strip('"'),
-                                "user": parts[4].strip('"'),
-                                "client": parts[5].strip('"'),
-                                "cpu": parts[6].strip('"'),
-                                "memory": parts[7].strip('"'),
-                                "read": parts[8].strip('"'),
-                                "write": parts[9].strip('"'),
-                                "duration": parts[10].strip('"'),
-                                "wait": parts[11].strip('"'),
-                                "io_wait": parts[12].strip('"'),
-                                "state": parts[13].strip('"'),
-                                "query": ";".join(parts[14:]).strip('"'),  # Join remaining parts as the query
-                            }
-                            producer.send(topic='db-monitoring', key=f"{random.randrange(999)}".encode(), value=record)
-                    time.sleep(1)  # Sleep briefly to avoid busy-waiting
-
-        except KeyboardInterrupt:
-            print("Stopping...")
-            break
-        except Exception as e:
-            print(f"Error reading file: {e}")
-            break
-
-    producer.close()
-    print("Producer closed.")

@@ -1,10 +1,17 @@
 {
     "cSpell.words": [
+        "appname",
+        "astype",
+        "bargap",
         "datetimeutc",
         "firstname",
+        "histfunc",
+        "iloc",
         "infile",
+        "nbins",
         "pgbench",
         "psutil",
-        "signum"
+        "signum",
+        "updatemode"
     ]
 }

@@ -1,11 +1,8 @@
 import subprocess
-import schedule # Install with `pip install schedule`
 import time
 import os
 import getpass
-from threading import Thread
 from multiprocessing import Event
-import ray
 counter = 0
 stop_event = Event()
 
@@ -34,7 +31,7 @@ def run_performance_test():
     stop_event.set()  # Signal to stop periodic tasks
 
 def DBStressMonitor():
-    print("DBStressMonitor started")
+    print("DB Stress Monitor started")
     while True:
         run_performance_test()
         stop_event.clear()  
