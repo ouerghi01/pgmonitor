@@ -65,12 +65,11 @@ def Consumer_Data_Monitoring(event_stop):
         Input('interval-component', 'n_intervals'),
     )
     def update_data(n_intervals):
-        global activities
+                global activities
        
 
-        with data_lock:
+        
         # Ensure 'mean' is a valid integer index
-            if activities is not None:
                 data = activities.to_dict('records')
                 fig = px.histogram(activities, x='cpu', y='write', histfunc='avg', nbins=20)
                 fig.update_layout(bargap=0.1, title="CPU vs Read Histogram")
