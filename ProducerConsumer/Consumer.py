@@ -14,7 +14,8 @@ import numpy as np
 class ConsumerVisualizer:
     def __init__(self):
         self.consumer =KafkaConsumer('db-monitoring', bootstrap_servers='localhost:9092',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
-        self.activities = pd.read_csv('ProducerConsumer/Pg_activity_Data/activities.csv')
+        self.activities = pd.DataFrame(columns=['datetimeutc', 'pid', 'database', 'appname', 'user', 'client', 'cpu', 'memory', 'read', 'write', 'duration', 'wait', 'io_wait', 'state', 'query'])
+
         self.app = Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
         self.app.layout=dbc.Container([
         dbc.Row(
