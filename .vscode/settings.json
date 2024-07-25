@@ -9,9 +9,11 @@
         "iloc",
         "infile",
         "nbins",
+        "nrows",
         "pgbench",
         "psutil",
         "signum",
+        "skiprows",
         "updatemode"
     ]
 }

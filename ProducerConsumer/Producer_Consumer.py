@@ -11,7 +11,7 @@ import threading
 
 def consumer(event_stop):
     
-    Consumer_Data_Monitoring(event_stop)
+    Consumer_Data_Monitoring()
 
 filename=None 
 pid=None 
@@ -50,7 +50,6 @@ def ExecuteProducerConsumer():
    
     while True :
       ProducerConsumer()
-      time.sleep(60)  # Sleep for 60 seconds before starting again
 
 
 

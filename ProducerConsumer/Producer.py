@@ -59,9 +59,7 @@ class Handler(PatternMatchingEventHandler):
     def process_event(self, event):
         try:
           with open(event.src_path, 'r') as f:
-             print(f"from producer  Processing file: {event.src_path}")
-             f.seek(0,2)
-             print(f"Last position: {self.last_position}")
+             f.seek(self.last_position)
              while not self.event_stop.is_set():
                 line = f.readline()
                 if not line:
@@ -95,6 +93,7 @@ class Handler(PatternMatchingEventHandler):
                     }
                      self.producer.send(topic='db-monitoring', key=f"{random.randrange(999)}".encode(), value=record)
                      self.last_position +=1  # Update the last position for next reading.
+                self.last_position = f.tell()
                 time.sleep(1)
         except FileNotFoundError as e:
             print(f"Error: {e}")

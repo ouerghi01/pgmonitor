@@ -10,10 +10,10 @@ def runDBStressMonitor():
     db_executor = multiprocessing.Process(target=ExecuteProducerConsumer)
     db_monitor_pg_activity = multiprocessing.Process(target=run_performance_test)
 
-
     db_stress_monitor.start()
     db_executor.start()    
     db_monitor_pg_activity.start()
+
     db_stress_monitor.join()
     db_monitor_pg_activity.join()
     db_executor.join()
