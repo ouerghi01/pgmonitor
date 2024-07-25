@@ -145,33 +145,33 @@ class ConsumerVisualizer:
                      data = message.value 
                      row=pd.DataFrame([data])                
                      self.activities = pd.concat([self.activities, row], ignore_index=True)
-                     self.out_q.put(self.activities)
+                     self.activities['cpu']=pd.to_numeric(self.activities['cpu'],downcast='float')
+                     self.activities['query'] = self.activities['query'].apply(lambda x : x.replace('$',''))
+                     self.activities['query'] = self.activities['query'].apply(lambda x: x[:12])
+                     self.activities['duration']=pd.to_numeric(self.activities['duration'],downcast='float')
+                     self.activities['memory']=pd.to_numeric(self.activities['memory'],downcast='float')
+                     self.activities['read']=pd.to_numeric(self.activities['read'],downcast='float')
+                     self.activities['write']=pd.to_numeric(self.activities['write'],downcast='float')
       time.sleep(1)
     def run_server(self):
          @self.app.callback(Output('table', 'data'),Output('pie-chart', 'figure'),Output('line-chart-cpu', 'figure'),Output('line-chart-memory', 'figure'),Output('line-read-over-time', 'figure'),Output('line-write-over-time', 'figure'),Output('line-duration-over-time', 'figure'),Output('longest-running-queries', 'data'),Input('interval', 'n_intervals'))  
          def update_table(n_intervals):
             def remove(query):
                 return query.replace('$','')
-            activities = self.out_q.get()
-            activities['query'] = activities['query'].apply(remove)
-            activities['query'] = activities['query'].apply(lambda x: x[:12])
-            activities['cpu']=pd.to_numeric(activities['cpu'])
-            activities['duration']=pd.to_numeric(activities['duration'])
-            activities['memory']=pd.to_numeric(activities['memory'])
-            activities['datetimeutc'] = pd.to_datetime(activities['datetimeutc'])
+            
             with self.data_lock:
-              if activities.empty:
+              if self.activities.empty:
                    return [], {}, {}, {}, {}, {}, {}, []
-              Data = activities.to_dict('records')
-              query_by_cpu = activities.groupby('query')['cpu'].mean().reset_index()
-              longest_running_queries = activities.nlargest(10, 'duration').to_dict('records')
+              Data = self.activities.to_dict('records')
+              query_by_cpu = self.activities.groupby('query')['cpu'].mean().reset_index()
+              longest_running_queries = self.activities.nlargest(10, 'duration').to_dict('records')
 
               pie_chart = px.pie(query_by_cpu, values='cpu', names='query', title='CPU Usage by Query')
-              line_chart_cpu = px.line(activities, x='datetimeutc', y='cpu', color='query', title='CPU Usage Over Time')
-              line_chart_memory = px.line(activities, x='datetimeutc', y='memory', color='query', title='Memory Usage Over Time')
-              line_chart_duration = px.line(activities, x='datetimeutc', y='duration', color='query', title='Duration Over Time')
-              line_chart_read = px.line(activities, x='datetimeutc', y='read', color='query', title='Read Operations Over Time')
-              line_chart_write = px.line(activities, x='datetimeutc', y='write', color='query', title='Write Operations Over Time')
+              line_chart_cpu = px.line(self.activities, x='datetimeutc', y='cpu', color='query', title='CPU Usage Over Time')
+              line_chart_memory = px.line(self.activities, x='datetimeutc', y='memory', color='query', title='Memory Usage Over Time')
+              line_chart_duration = px.line(self.activities, x='datetimeutc', y='duration', color='query', title='Duration Over Time')
+              line_chart_read = px.line(self.activities, x='datetimeutc', y='read', color='query', title='Read Operations Over Time')
+              line_chart_write = px.line(self.activities, x='datetimeutc', y='write', color='query', title='Write Operations Over Time')
               return Data, pie_chart, line_chart_cpu, line_chart_memory, line_chart_read, line_chart_write, line_chart_duration, longest_running_queries
          time.sleep(5)
          self.app.run_server(debug=False)
