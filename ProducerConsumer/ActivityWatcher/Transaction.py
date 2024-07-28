@@ -2,7 +2,7 @@ import subprocess
 import time
 import os
 import getpass
-from multiprocessing import Event
+from multiprocessing import Event 
 counter = 0
 stop_event = Event()
 
@@ -17,7 +17,6 @@ def run_performance_test():
     except subprocess.CalledProcessError as e:
         print(e.stderr)
         exit(1)
-    start = time.time()
     try:
         result = subprocess.run([bash_script_path], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if result.returncode == 0:
@@ -25,13 +24,10 @@ def run_performance_test():
     except subprocess.CalledProcessError as e:
         print(e.stderr)
         exit(1)
-    end = time.time()
-    execution_time = end - start
-    print(f"Execution time: {execution_time:.2f} seconds")
     stop_event.set()  # Signal to stop periodic tasks
 
 def DBStressMonitor():
-    print("DB Stress Monitor started")
+    #print("DB Stress Monitor started")
     while True:
         run_performance_test()
         stop_event.clear()  

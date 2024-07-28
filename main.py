@@ -1,5 +1,7 @@
 from ProducerConsumer.ActivityWatcher.Transaction import DBStressMonitor
 from ProducerConsumer.Producer_Consumer import ExecuteProducerConsumer
+from ProducerConsumer.Notify import NotificationOn
+from ProducerConsumer.Notify import CollectPgStatStatements
 
 from ProducerConsumer.Producer import run_performance_test
 import multiprocessing 
@@ -9,14 +11,16 @@ def runDBStressMonitor():
     db_stress_monitor = multiprocessing.Process(target=DBStressMonitor)
     db_executor = multiprocessing.Process(target=ExecuteProducerConsumer)
     db_monitor_pg_activity = multiprocessing.Process(target=run_performance_test)
-
+    #db_notify=multiprocessing.Process(target=NotificationOn)
+    db_pg_stat=multiprocessing.Process(target=CollectPgStatStatements)
     db_stress_monitor.start()
     db_executor.start()    
     db_monitor_pg_activity.start()
-
+    db_pg_stat.start()
     db_stress_monitor.join()
     db_monitor_pg_activity.join()
     db_executor.join()
+    db_pg_stat.join()
 
 
 if __name__ == "__main__":
@@ -24,7 +28,7 @@ if __name__ == "__main__":
     try:
         while True:
             runDBStressMonitor()
-            time.sleep(5)  # Added delay to prevent overwhelming the system with process restarts
+            time.sleep(5)  
     except KeyboardInterrupt:
         print("Program interrupted. Shutting down...")
         ray.shutdown()

@@ -2,18 +2,30 @@
     "cSpell.words": [
         "appname",
         "astype",
+        "autovacuum",
         "bargap",
         "datetimeutc",
+        "dayofweek",
+        "dtypes",
+        "figsize",
+        "fillna",
         "firstname",
         "histfunc",
         "iloc",
         "infile",
+        "joblib",
         "nbins",
         "nrows",
         "pgbench",
         "psutil",
+        "scatterplot",
         "signum",
         "skiprows",
-        "updatemode"
+        "tfidf",
+        "toarray",
+        "updatemode",
+        "vect",
+        "xlabel",
+        "ylabel"
     ]
 }

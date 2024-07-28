@@ -36,8 +36,6 @@ def run_performance_test():
     except subprocess.CalledProcessError as e:
         print(e.stderr)
         exit(1)
-    
-
 
 class Handler(PatternMatchingEventHandler):
     def __init__(self, event_stop):
