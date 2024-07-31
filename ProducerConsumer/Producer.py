@@ -1,5 +1,6 @@
 import subprocess
 from kafka import KafkaProducer
+import csv
 import random
 import json
 import os
@@ -50,29 +51,30 @@ class Handler(PatternMatchingEventHandler):
         self.skip_header = False
         super().__init__()
     def on_modified(self, event) -> None:
-        print(f"Event type: {event.event_type}  path : {event.src_path}")
         if event.src_path==self.temp_filename_csv:
            self.process_event(event)
        
     def process_event(self, event):
         try:
-          with open(event.src_path, 'r') as f:
-             f.seek(self.last_position)
-             while not self.event_stop.is_set():
-                line = f.readline()
-                if not line:
-                    time.sleep(0.01)
-                    break
-                if line.strip():
-                  if not self.skip_header:
-                    self.skip_header = True  
-                    continue
-                  if line.startswith("*") or "uptime" in line or "Global:" in line:
-                    continue
+              with open(event.src_path, 'r') as f:
+                rows = list(csv.reader(f))
+                if len(rows) <= 1:
+                    return  
 
-                  parts = line.strip().split(';')
-                  if len(parts) >= 14:
-                     record = {
+                
+
+                last_line = rows[-1]
+                if (len(last_line)>1):
+                    last_line = last_line[0]+","+last_line[1]
+                else:
+                    last_line = last_line[0]
+                if not last_line:
+                    time.sleep(0.01)
+                    return
+                
+                parts = last_line.split(";")
+                if len(parts) >= 14:
+                    record = {
                         "datetimeutc": parts[0].strip('"'),
                         "pid": parts[1].strip('"'),
                         "database": parts[2].strip('"'),
@@ -89,10 +91,8 @@ class Handler(PatternMatchingEventHandler):
                         "state": parts[13].strip('"'),
                         "query": ";".join(parts[14:]).strip('"'),
                     }
-                     self.producer.send(topic='db-monitoring', key=f"{random.randrange(999)}".encode(), value=record)
-                     self.last_position +=1  # Update the last position for next reading.
-                self.last_position = f.tell()
-                time.sleep(1)
+                    print(record)
+                    self.producer.send(topic='db-monitoring', key=f"{random.randrange(999)}".encode(), value=record)
         except FileNotFoundError as e:
             print(f"Error: {e}")
             self.event_stop.set()

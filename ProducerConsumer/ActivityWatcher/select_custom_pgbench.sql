@@ -1,4 +1,4 @@
 
 
-SELECT * FROM users,posts ;
+SELECT * FROM users,posts  limit 10;
 

@@ -8,6 +8,7 @@ from email.mime.multipart import MIMEMultipart
 import os
 import multiprocessing
 import csv
+
 class EmailSender:
     def __init__(self):
         self.dbname = "bench"
@@ -67,6 +68,27 @@ class EmailSender:
           server.quit()
         except Exception as e:
           print(f"Failed to send email: {e}")
+    def sendAnyData(self, body):
+       try:
+          payload = json.loads(body)
+          subject = 'Notification'
+          text = f"Received Data:\n\n{json.dumps(payload, indent=2)}"
+          msg = MIMEMultipart()
+          msg['From'] = self.email
+          msg['To'] = self.to_email
+          msg['Subject'] = subject
+          msg.attach(MIMEText(text, 'plain'))
+
+          server = smtplib.SMTP('smtp.gmail.com', 587)
+          server.starttls()
+         
+          server.login(self.email, self.password_email)
+          server.sendmail(self.email, self.to_email, msg.as_string())
+          server.quit()
+       except Exception as e:
+           print(f"Failed to send email: {e}")
+
+       
     def listen_notifications(self):
         self.conn.poll()
         while self.conn.notifies:
@@ -79,7 +101,6 @@ class EmailSender:
             pass
          else:
             self.listen_notifications()
-
 
 def NotificationOn():
    print("notify started")

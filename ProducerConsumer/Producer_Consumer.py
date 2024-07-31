@@ -10,6 +10,7 @@ import threading
      
 
 def consumer(event_stop):
+    print('Consumer started')
     
     Consumer_Data_Monitoring()
 
@@ -20,15 +21,13 @@ def producer(event_stop):
     filename = r"./ProducerConsumer/Pg_activity_Data/"
     print('Producer started')
     def run_producer(event_stop):
-        while not event_stop.is_set():
-            if filename is not None:
-                try:
-                    Producer_Data_Monitoring(event_stop, filename)
-                except psutil.NoSuchProcess:
-                    print(f"Process {pid} does not exist.")
-                    return
-            else:
-                print("Error: temp_filename is None")
+       
+            try:
+                Producer_Data_Monitoring(event_stop, filename)
+            except psutil.NoSuchProcess:
+                print(f"Process {pid} does not exist.")
+                return
+            
             event_stop.clear()  # Reset for next iteration
 
     run_producer(event_stop)
@@ -46,6 +45,7 @@ def ProducerConsumer():
     # Wait for all processes to complete
     consumer_process.join()
     producer_process.join()
+
 def ExecuteProducerConsumer():
    
     while True :

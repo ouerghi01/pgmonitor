@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from dash  import Dash , dcc , html,dash_table,callback,Output,Input
+from dash  import Dash , dcc , html,dash_table,callback,Output,Input 
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import dash_bootstrap_components as dbc
@@ -15,6 +15,7 @@ import os
 import json
 import numpy as np
 from ProducerConsumer.Notify import EmailSender
+import json 
 class ConsumerVisualizer:
     def __init__(self):
         self.consumer =KafkaConsumer('db-monitoring', bootstrap_servers='localhost:9092',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
@@ -106,35 +107,49 @@ class ConsumerVisualizer:
             width=12
         )
     ),
-    dbc.Row(
-        dbc.Col([
-            html.H4('Top Longest Running Queries', style={'textAlign': 'center'}),
-            dash_table.DataTable(
-                id='longest-running-queries',
-                page_size=5,
-                style_cell={
-                    'textAlign': 'left',
-                    'border': '1px solid rgba(0,0,0,0.4)',
-                    'boxShadow': '10px 10px 5px 0px gray',
-                    'fontFamily': 'Arial, sans-serif',
-                    'fontSize': '14px',
-                    'padding': '10px'
-                },
-                style_header={
-                    'backgroundColor': 'rgb(230, 230, 230)',
-                    'fontWeight': 'bold'
-                },
-                style_data={
-                    'whiteSpace': 'normal',
-                    'height': 'auto'
-                },
-                style_table={
-                    'overflowX': 'auto'
-                }
-            )
-        ],
-        width=12)
-    ),
+   dbc.Row(
+    [
+        dbc.Col(
+            [
+                html.H4('Top Longest Running Queries', style={'textAlign': 'center'}),
+                dash_table.DataTable(
+                    id='longest-running-queries',
+                    page_size=5,
+                    style_cell={
+                        'textAlign': 'left',
+                        'border': '1px solid rgba(0,0,0,0.4)',
+                        'boxShadow': '10px 10px 5px 0px gray',
+                        'fontFamily': 'Arial, sans-serif',
+                        'fontSize': '14px',
+                        'padding': '10px'
+                    },
+                    style_header={
+                        'backgroundColor': 'rgb(230, 230, 230)',
+                        'fontWeight': 'bold'
+                    },
+                    style_data={
+                        'whiteSpace': 'normal',
+                        'height': 'auto'
+                    },
+                    style_table={
+                        'overflowX': 'auto'
+                    },
+                    fixed_rows={'headers': True}
+                )
+            ],
+            width=6,
+            style={'padding': '0 10px'}
+        ),
+        dbc.Col(
+            [
+                dcc.Graph(id='scatter', style={'height': '100%'})
+            ],
+            width=6,
+            style={'padding': '0 10px'}
+        )
+    ]
+)
+,
     dcc.Interval(id='interval', interval=5*1000, n_intervals=0, max_intervals=-1)
 ])
         self.data_lock = threading.Lock()
@@ -150,6 +165,8 @@ class ConsumerVisualizer:
         self.tf_idf_vect=load(os.path.abspath('/home/aziz/DBWatch/Stage_Bri/ProducerConsumer/models/tfidf_vect.pkl'))
         self.isolation_forest=load(os.path.abspath('/home/aziz/DBWatch/Stage_Bri/ProducerConsumer/models/isolation_forest.joblib'))
     def consume_messages(self):
+      print("Consumer  message started")
+      time.sleep(3)
       while not self.event_stop.is_set():
         messages = self.consumer.poll(timeout_ms=1000)
         if messages:
@@ -159,21 +176,33 @@ class ConsumerVisualizer:
                      data = message.value 
                      row=pd.DataFrame([data])
                      row_activity = row.copy()
-                     Data = self.prepare_data_for_prediction(row)
+                     Data = self.prepare_data_for_prediction(row).fillna(0)
+                     print(Data)
+                     
                      prediction = self.isolation_forest.predict(Data.values)
                      self.message_count+=1
-                     if prediction[0] == -1:
+                     if prediction[0] <0:
                          print('Anomaly detected')
-                         self.emailSender.sendEmail({
-                            "Anomaly":-1
-                         })
-                     else:
-                         print('Anomaly not detected')
+                         print(row)
+                         self.emailSender.sendAnyData(json.dumps(
+                            {
+                               'alert': 'Anomaly detected',
+                            }
+                         ))
                      
                      self.activities = pd.concat([self.activities, row_activity], ignore_index=True)
+                     if self.activities.shape[0] > 10:
+                          if "anomaly" in self.activities.columns:
+                             self.activities.drop(columns=['anomaly'], inplace=True)
+                          prepared_data = self.prepare_data_for_prediction(self.activities.dropna())
+                          prediction_act=self.isolation_forest.predict(prepared_data.values)
+                          self.activities['anomaly'] = prediction_act
                      if self.message_count % self.retrain_interval == 0:
-                          thread_retain=threading.Thread(target=self.retrain_models)
-                          thread_retain.start()
+                        pass
+                          #if "anomaly" in self.activities.columns:
+                             #self.activities.drop(columns=['anomaly'], inplace=True)
+                          #thread_retain=threading.Thread(target=self.retrain_models)
+                          #thread_retain.start()
                      self.convert_activities()
       time.sleep(1)
     def retrain_models(self):
@@ -182,11 +211,11 @@ class ConsumerVisualizer:
         with self.data_lock:
            
           Dataset=self.activities.copy()
-        isolation_forest = IsolationForest(n_estimators=100, contamination='auto')
-        Data=self.prepare_data_for_prediction(Dataset)
-        isolation_forest.fit(Data.values)
-        dump(isolation_forest, os.path.abspath('/home/aziz/DBWatch/Stage_Bri/ProducerConsumer/models/isolation_forest.joblib'))
-        self.isolation_forest = isolation_forest
+          isolation_forest = IsolationForest(n_estimators=100, contamination='auto')
+          Data=self.prepare_data_for_prediction(Dataset)
+          isolation_forest.fit(Data.values)
+          dump(isolation_forest, os.path.abspath('/home/aziz/DBWatch/Stage_Bri/ProducerConsumer/models/isolation_forest.joblib'))
+          self.isolation_forest = isolation_forest
     
        
     def prepare_data_for_prediction(self, row):
@@ -197,9 +226,29 @@ class ConsumerVisualizer:
            if feature not in numeric_features:
               row[feature] = 0 
         
-        numeric_features.extend(['year', 'month', 'day', 'hour', 'minute', 'second', 'day_of_week','is_weekend'])
+        additional_features = ['year', 'month', 'day', 'hour', 'minute', 'second', 'day_of_week', 'is_weekend']
+        numeric_features.extend(f for f in additional_features if f not in numeric_features)
+
         row['is_weekend'] = (row['datetimeutc'].dt.dayofweek >= 5).astype(np.int64)
-        row[numeric_features] = self.scaler_numeric.transform(row[numeric_features])
+        numeric_features = list(dict.fromkeys(numeric_features))
+        features = [
+           'pid', 
+    'cpu',         # 00
+    'memory',      # 01
+    'read',        # 02
+    'write',       # 03
+    'duration',    # 04
+    'year',        # 05
+    'month',       # 06
+    'day',         # 07
+    'hour',        # 08
+    'minute',      # 09
+    'second',      # 10
+    'day_of_week', # 11
+    'is_weekend'                  ]
+
+
+        row[features] = self.scaler_numeric.transform(row[features])
         row.drop(['datetimeutc','pid'], axis=1, inplace=True)
         categorical_features = ['state', 'user', 'wait', 'io_wait', 'client', 'appname', 'database']
         row[categorical_features] = row[categorical_features].fillna('unknown')
@@ -240,11 +289,12 @@ class ConsumerVisualizer:
         self.activities['read']=pd.to_numeric(self.activities['read'],downcast='float')
         self.activities['write']=pd.to_numeric(self.activities['write'],downcast='float')
     def run_server(self):
-         @self.app.callback(Output('table', 'data'),Output('pie-chart', 'figure'),Output('line-chart-cpu', 'figure'),Output('line-chart-memory', 'figure'),Output('line-read-over-time', 'figure'),Output('line-write-over-time', 'figure'),Output('line-duration-over-time', 'figure'),Output('longest-running-queries', 'data'),Input('interval', 'n_intervals'))  
+         print("Server started")
+         @self.app.callback(Output('table', 'data'),Output('pie-chart', 'figure'),Output('line-chart-cpu', 'figure'),Output('line-chart-memory', 'figure'),Output('line-read-over-time', 'figure'),Output('line-write-over-time', 'figure'),Output('line-duration-over-time', 'figure'),Output('longest-running-queries', 'data'),Output('scatter','figure'),Input('interval', 'n_intervals'))  
          def update_table(n_intervals):
             with self.data_lock:
               if self.activities.empty:
-                   return [], {}, {}, {}, {}, {}, {}, []
+                   return [], {}, {}, {}, {}, {}, {}, [],{}
               Data = self.activities.to_dict('records')
               query_by_cpu = self.activities.groupby('query')['cpu'].mean().reset_index()
               longest_running_queries = self.activities.nlargest(10, 'duration').to_dict('records')
@@ -255,9 +305,10 @@ class ConsumerVisualizer:
               line_chart_duration = px.line(self.activities, x='datetimeutc', y='duration', color='query', title='Duration Over Time')
               line_chart_read = px.line(self.activities, x='datetimeutc', y='read', color='query', title='Read Operations Over Time')
               line_chart_write = px.line(self.activities, x='datetimeutc', y='write', color='query', title='Write Operations Over Time')
-              return Data, pie_chart, line_chart_cpu, line_chart_memory, line_chart_read, line_chart_write, line_chart_duration, longest_running_queries
-         time.sleep(5)
+              scatter_chart = px.scatter(self.activities, x='cpu', y='anomaly', hover_data=['query'])
+              return Data, pie_chart, line_chart_cpu, line_chart_memory, line_chart_read, line_chart_write, line_chart_duration, longest_running_queries,scatter_chart
          self.app.run_server(debug=False)
+         
     def Consumer_Data_Monitoring(self):
       consumer_thread=threading.Thread(target=self.consume_messages)
       consumer_thread.start()
@@ -268,9 +319,10 @@ class ConsumerVisualizer:
             time.sleep(1)
       except KeyboardInterrupt:
         self.event_stop.set()
-       # server_thread.join()
+        server_thread.join()
         consumer_thread.join()
 def Consumer_Data_Monitoring():
+    print("Consumer_1 started")
     consumer_visualizer = ConsumerVisualizer()
     consumer_visualizer.Consumer_Data_Monitoring()
     

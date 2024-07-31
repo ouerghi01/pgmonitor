@@ -6,6 +6,7 @@
         "bargap",
         "datetimeutc",
         "dayofweek",
+        "dropna",
         "dtypes",
         "figsize",
         "fillna",
@@ -27,5 +28,8 @@
         "vect",
         "xlabel",
         "ylabel"
-    ]
+    ],
+    "files.watcherExclude": {
+        "**/target": true
+    }
 }
