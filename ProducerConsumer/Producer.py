@@ -60,9 +60,6 @@ class Handler(PatternMatchingEventHandler):
                 rows = list(csv.reader(f))
                 if len(rows) <= 1:
                     return  
-
-                
-
                 last_line = rows[-1]
                 if (len(last_line)>1):
                     last_line = last_line[0]+","+last_line[1]
