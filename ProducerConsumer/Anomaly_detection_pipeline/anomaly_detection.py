@@ -83,8 +83,9 @@ class AnomalyDetectionPipeline :
                 x['neu'] = x['query'].apply(lambda x: analyze_sentiment(x)['neu'])
                 x['pos'] = x['query'].apply(lambda x: analyze_sentiment(x)['pos'])
                 x['is_positive'] = x['query'].apply(is_positive).astype(int)
-
-            x['cpu_memory_ratio'] = x['cpu'] / (x['memory'] + 1e-6)
+            current_cpu=x['cpu']
+            current_memory=x['memory']
+            x['cpu_memory_ratio'] = current_cpu/ (current_memory + 1e-6)
             x['read_write_ratio'] = x['read'] / (x['write'] + 1e-6)
             x['cpu_duration_ratio'] = x['cpu'] / (x['duration'] + 1e-6)
             x['memory_duration_ratio'] = x['memory'] / (x['duration'] + 1e-6)
@@ -132,7 +133,7 @@ class AnomalyDetectionPipeline :
         try:
             self.normalize_query(x)
             query_features=None
-            if (self.tf_idf is None or self.count_vect is None) or not hasattr(self.tf_idf, 'vocabulary_'):
+            if (self.tf_idf is None or self.count_vect is None) :
                 if len(self.vocab)>0 :
                     self.count_vect=CountVectorizer(vocabulary=self.vocab)
                 else :
@@ -206,6 +207,7 @@ class AnomalyDetectionPipeline :
                 x = self.encode_column(x, col)
         return x
     def assign_label(self, x: pd.DataFrame) -> pd.DataFrame:
+        # here maybe we need to use deep learning instead of using normal key like model lstm
         def assign_anomalie(row):
             anomalies=[]
             if row['anomaly_scores'] == 1:
@@ -263,16 +265,22 @@ class AnomalyDetectionPipeline :
     def prepare_data_for_prediction(self, x: pd.DataFrame) -> pd.DataFrame:
         x = self.transform_for_model(x)
         self.scaler=self.all_models['scaler']
-        x_train = self.scaler.transform(x)
+        expected_features = self.scaler.feature_names_in_
+        for feature in expected_features:
+            if feature not in x.columns:
+               x[feature] = 0
+        x_train = self.scaler.transform(x[expected_features])
         x_tensor = tf.convert_to_tensor(x_train, dtype=tf.float32)
         self.autoencoder=self.all_models['autoencoder']
         reconstruction = self.autoencoder.predict(x)
         mse = tf.reduce_mean(tf.square(x_tensor - reconstruction), axis=1)
         autoencoder_scores = mse.numpy()
         self.isolation_forest=self.all_models['isolation_forest']
-        isolation_forest_scores = -self.isolation_forest.decision_function(x)
+        isolation_features=self.isolation_forest.feature_names_in_
+        isolation_forest_scores = -self.isolation_forest.decision_function(x[expected_features])
         self.svm=self.all_models['one_class_svm']
-        one_class_svm_scores = -self.svm.decision_function(x)
+        one_class_svm_features=self.svm.feature_names_in_
+        one_class_svm_scores = -self.svm.decision_function(x[one_class_svm_features])
         combined_scores = pd.DataFrame({
                 'autoencoder': autoencoder_scores,
                 'isolation_forest': isolation_forest_scores,
@@ -407,10 +415,11 @@ class AnomalyDetectionPipeline :
     def final_predection(self, x: pd.DataFrame) -> pd.DataFrame:
         try:
             self.decision_tree_classifier=self.all_models['treeClassifier']
+            features_tree = self.decision_tree_classifier.feature_names_in_
             x=self.prepare_data_for_prediction(x)
             category_list = self.all_models['le_classes']
             #x.drop('type_anomalie', axis=1, inplace=True)
-            y_pred = self.decision_tree_classifier.predict(x)
+            y_pred = self.decision_tree_classifier.predict(x[features_tree])
             y_pred_labels = [category_list[i] for i in y_pred]
             predictions_df = pd.DataFrame({'predicted_label': y_pred_labels})
             return pd.concat([x.reset_index(drop=True), predictions_df], axis=1)
@@ -439,17 +448,8 @@ class AnomalyDetectionPipeline :
         os.makedirs(os.path.dirname(self.path), exist_ok=True)
         with open(self.path, 'wb') as f:
             joblib.dump(data, f)
-            
     def load(self):
-        # handle if file dosent exist 
         if (os.path.exists(self.path)):
              return joblib.load(self.path)
         else :
-            
             return {}
-
-# we need to build this method tune_hyperparameters 
-data=pd.read_csv('/home/aziz/DBWatch/Stage_Bri/ProducerConsumer/Pg_activity_Data/activities.csv',sep=';')
-pipeline = AnomalyDetectionPipeline(columns=data.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor.pkl')
-#trainer_data=pipeline.train_classifier(data)
-pred_data=pipeline.final_predection(data)

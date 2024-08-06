@@ -15,13 +15,12 @@ import os
 import json
 import numpy as np
 from ProducerConsumer.Notify import EmailSender
+from ProducerConsumer.Anomaly_detection_pipeline.anomaly_detection import AnomalyDetectionPipeline  
 import json 
 class ConsumerVisualizer:
     def __init__(self):
         self.consumer =KafkaConsumer('db-monitoring', bootstrap_servers='localhost:9092',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
         self.activities = pd.DataFrame(columns=['datetimeutc', 'pid', 'database', 'appname', 'user', 'client', 'cpu', 'memory', 'read', 'write', 'duration', 'wait', 'io_wait', 'state', 'query'])
-        # Load the models
-        self.load_models()
         self.app = Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
         self.app.layout=dbc.Container([
         dbc.Row(
@@ -158,14 +157,10 @@ class ConsumerVisualizer:
         self.retrain_interval = 100  # Retrain after every 100 messages
         self.message_count = 0
         self.emailSender=EmailSender()
+        self.pipeline=AnomalyDetectionPipeline(columns=self.activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor.pkl')
 
-    def load_models(self):
-        self.scaler_numeric=load( os.path.abspath( '/home/aziz/DBWatch/Stage_Bri/ProducerConsumer/models/scaler.pkl'))
-        self.scaler_categorical=load(os.path.abspath('/home/aziz/DBWatch/Stage_Bri/ProducerConsumer/models/encoder.pkl'))
-        self.tf_idf_vect=load(os.path.abspath('/home/aziz/DBWatch/Stage_Bri/ProducerConsumer/models/tfidf_vect.pkl'))
-        self.isolation_forest=load(os.path.abspath('/home/aziz/DBWatch/Stage_Bri/ProducerConsumer/models/isolation_forest.joblib'))
+    
     def consume_messages(self):
-      print("Consumer  message started")
       time.sleep(3)
       while not self.event_stop.is_set():
         messages = self.consumer.poll(timeout_ms=1000)
@@ -175,93 +170,47 @@ class ConsumerVisualizer:
                   for message in msgs:
                      data = message.value 
                      row=pd.DataFrame([data])
-                     row_activity = row.copy()
-                     Data = self.prepare_data_for_prediction(row).fillna(0)
-                     print(Data)
-                     
-                     prediction = self.isolation_forest.predict(Data.values)
+                     row_activity = row.copy() # use this for prediction
+                     prediction = self.pipeline.final_predection(self.transform_row_data(row))
                      self.message_count+=1
-                     if prediction[0] <0:
+                     if prediction["predicted_label"][0]!="normal":
                          print('Anomaly detected')
                          print(row)
                          self.emailSender.sendAnyData(json.dumps(
                             {
-                               'alert': 'Anomaly detected',
+                               'alert': prediction["predicted_label"],
                             }
                          ))
                      
                      self.activities = pd.concat([self.activities, row_activity], ignore_index=True)
+                     self.activities['predicted_label'] = prediction["predicted_label"]
+                     self.activities['anomaly_scores'] = prediction["anomaly_scores"]
+                     '''
                      if self.activities.shape[0] > 10:
-                          if "anomaly" in self.activities.columns:
-                             self.activities.drop(columns=['anomaly'], inplace=True)
-                          prepared_data = self.prepare_data_for_prediction(self.activities.dropna())
-                          prediction_act=self.isolation_forest.predict(prepared_data.values)
-                          self.activities['anomaly'] = prediction_act
+                          if "predicted_label" and "anomaly_scores" in self.activities.columns:
+                             self.activities.drop(columns=['predicted_label','anomaly_scores'], inplace=True)
+                          prediction_data = self.pipeline.final_predection(self.transform_row_data(self.activities.dropna()))
+                          self.activities['predicted_label'] = prediction_data['predicted_label']
+                          self.activities['anomaly_scores'] = prediction_data['anomaly_scores']
                      if self.message_count % self.retrain_interval == 0:
                         pass
                           #if "anomaly" in self.activities.columns:
                              #self.activities.drop(columns=['anomaly'], inplace=True)
                           #thread_retain=threading.Thread(target=self.retrain_models)
                           #thread_retain.start()
+                     '''
+                     
                      self.convert_activities()
       time.sleep(1)
     def retrain_models(self):
         print("training start\n")
-
         with self.data_lock:
-           
           Dataset=self.activities.copy()
           isolation_forest = IsolationForest(n_estimators=100, contamination='auto')
           Data=self.prepare_data_for_prediction(Dataset)
           isolation_forest.fit(Data.values)
           dump(isolation_forest, os.path.abspath('/home/aziz/DBWatch/Stage_Bri/ProducerConsumer/models/isolation_forest.joblib'))
           self.isolation_forest = isolation_forest
-    
-       
-    def prepare_data_for_prediction(self, row):
-        self.transform_row_data(row)
-        fixed_numeric = ['pid','cpu', 'memory', 'read', 'write', 'duration']
-        numeric_features = list(row.select_dtypes(include=['int64', 'float64']).columns)
-        for feature in fixed_numeric:
-           if feature not in numeric_features:
-              row[feature] = 0 
-        
-        additional_features = ['year', 'month', 'day', 'hour', 'minute', 'second', 'day_of_week', 'is_weekend']
-        numeric_features.extend(f for f in additional_features if f not in numeric_features)
-
-        row['is_weekend'] = (row['datetimeutc'].dt.dayofweek >= 5).astype(np.int64)
-        numeric_features = list(dict.fromkeys(numeric_features))
-        features = [
-           'pid', 
-    'cpu',         # 00
-    'memory',      # 01
-    'read',        # 02
-    'write',       # 03
-    'duration',    # 04
-    'year',        # 05
-    'month',       # 06
-    'day',         # 07
-    'hour',        # 08
-    'minute',      # 09
-    'second',      # 10
-    'day_of_week', # 11
-    'is_weekend'                  ]
-
-
-        row[features] = self.scaler_numeric.transform(row[features])
-        row.drop(['datetimeutc','pid'], axis=1, inplace=True)
-        categorical_features = ['state', 'user', 'wait', 'io_wait', 'client', 'appname', 'database']
-        row[categorical_features] = row[categorical_features].fillna('unknown')
-        new_data_encoded = self.scaler_categorical.transform(row[categorical_features])
-        encoded_df = pd.DataFrame(new_data_encoded, columns=self.scaler_categorical.get_feature_names_out(categorical_features))
-        Data = pd.concat([row, encoded_df], axis=1)
-        Data.drop(columns=categorical_features, inplace=True)
-        new_data_query_vectors = self.tf_idf_vect.transform(row['query'])
-        query_vectors_df = pd.DataFrame(new_data_query_vectors.toarray(), columns=self.tf_idf_vect.get_feature_names_out())
-        Data = pd.concat([Data, query_vectors_df], axis=1)
-        Data.drop(columns=['query'], inplace=True)
-        return Data
-
     def transform_row_data(self, row):
         row['cpu'] = pd.to_numeric(row['cpu'], errors='coerce')
         row['memory'] = pd.to_numeric(row['memory'], errors='coerce')
@@ -269,16 +218,8 @@ class ConsumerVisualizer:
         row['write'] = pd.to_numeric(row['write'], errors='coerce')
         row['duration'] = pd.to_numeric(row['duration'], errors='coerce') 
         row['datetimeutc'] = pd.to_datetime(row['datetimeutc'], errors='coerce') 
-        row['year'] = row['datetimeutc'].dt.year
-        row['month'] = row['datetimeutc'].dt.month
-        row['day'] = row['datetimeutc'].dt.day
-        row['hour'] = row['datetimeutc'].dt.hour
-        row['minute'] = row['datetimeutc'].dt.minute
-        row['second'] = row['datetimeutc'].dt.second
-        row['day_of_week'] = row['datetimeutc'].dt.dayofweek
-        
-
         row['pid']=pd.to_numeric(row['pid'], errors='coerce')
+        return row
 
     def convert_activities(self):
         self.activities['cpu']=pd.to_numeric(self.activities['cpu'],downcast='float')
@@ -305,7 +246,7 @@ class ConsumerVisualizer:
               line_chart_duration = px.line(self.activities, x='datetimeutc', y='duration', color='query', title='Duration Over Time')
               line_chart_read = px.line(self.activities, x='datetimeutc', y='read', color='query', title='Read Operations Over Time')
               line_chart_write = px.line(self.activities, x='datetimeutc', y='write', color='query', title='Write Operations Over Time')
-              scatter_chart = px.scatter(self.activities, x='cpu', y='anomaly', hover_data=['query'])
+              scatter_chart = px.scatter(self.activities, x='cpu', y='anomaly_scores', hover_data=['query'])
               return Data, pie_chart, line_chart_cpu, line_chart_memory, line_chart_read, line_chart_write, line_chart_duration, longest_running_queries,scatter_chart
          self.app.run_server(debug=False)
          
