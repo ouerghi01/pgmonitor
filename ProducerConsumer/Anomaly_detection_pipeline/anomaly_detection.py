@@ -1,8 +1,11 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.metrics import pairwise_distances_argmin_min
+from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from numpy import nan
 from sklearn import tree
 from sklearn.metrics import accuracy_score
 import numpy as np
@@ -19,17 +22,16 @@ from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import  LabelEncoder
 from sklearn.svm import  OneClassSVM
 import tensorflow as tf
-from tensorflow.keras.layers import Input, Dense # type: ignore
+from tensorflow.keras.layers import Input, Dense  ,Flatten ,Reshape #   type: ignore
 from tensorflow.keras.models import Model # type: ignore
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import precision_recall_fscore_support
+from sklearn.metrics import precision_recall_fscore_support # type: ignore
 import logging 
 import nltk
 import re
 import string
 from pprint import pprint
 from nltk.sentiment import SentimentIntensityAnalyzer
-sia = SentimentIntensityAnalyzer()
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 class AnomalyDetectionPipeline :
@@ -54,15 +56,18 @@ class AnomalyDetectionPipeline :
         self.count_vect = None
         self.vocab = []
         self.sia=SentimentIntensityAnalyzer()
-    def createfeatures(self, x:pd.DataFrame) -> pd.DataFrame :
-        def  analyze_sentiment(text):
+        self.misclassified_data = pd.DataFrame()  # Initialize if not already done
+    def  analyze_sentiment(self,text):
             res=self.sia.polarity_scores(text)
             return res
+    def createfeatures(self, x:pd.DataFrame) -> pd.DataFrame :
+        
         def is_positive(tweet: str) -> bool:
                 """True if tweet has positive compound sentiment, False otherwise."""
                 return self.sia.polarity_scores(tweet)["compound"] > 0
         try:
             if "datetimeutc" in x.columns :
+                x['avg_io_wait_time'] = x.groupby('datetimeutc')['io_wait'].transform(lambda x: (x == 'Y').sum())  # Count of wait times
                 x['datetimeutc'] = pd.to_datetime(x['datetimeutc'])
                 x['year'] = x['datetimeutc'].dt.year
                 x['month'] = x['datetimeutc'].dt.month
@@ -78,13 +83,23 @@ class AnomalyDetectionPipeline :
                 x.drop('user', axis=1, inplace=True)
                 # Create Performance Anomalies Features
             if "query" in x.columns:
-                x['compound'] = x['query'].apply(lambda x: analyze_sentiment(x)['compound'])
-                x['neg'] = x['query'].apply(lambda x: analyze_sentiment(x)['neg'])
-                x['neu'] = x['query'].apply(lambda x: analyze_sentiment(x)['neu'])
-                x['pos'] = x['query'].apply(lambda x: analyze_sentiment(x)['pos'])
+                x['query'] = x['query'].astype(str)
+                x['compound'] = x['query'].apply(lambda x: self.analyze_sentiment(x)['compound'])
+                x['neg'] = x['query'].apply(lambda x: self.analyze_sentiment(x)['neg'])
+                x['neu'] = x['query'].apply(lambda x: self.analyze_sentiment(x)['neu'])
+                x['pos'] = x['query'].apply(lambda x: self.analyze_sentiment(x)['pos'])
                 x['is_positive'] = x['query'].apply(is_positive).astype(int)
             current_cpu=x['cpu']
             current_memory=x['memory']
+            ################################
+            x['avg_query_duration'] = x.groupby('query')['duration'].transform('mean')
+            x['max_query_duration'] = x.groupby('query')['duration'].transform('max')
+            
+            #  System Metric
+            x['peak_io_wait_time'] = x['io_wait'].apply(lambda y: 1 if y == 'Y' else 0)  # Example peak
+            x['historical_cpu_utilization'] = 1
+            x['historical_memory_utilization'] = 1
+           
             x['cpu_memory_ratio'] = current_cpu/ (current_memory + 1e-6)
             x['read_write_ratio'] = x['read'] / (x['write'] + 1e-6)
             x['cpu_duration_ratio'] = x['cpu'] / (x['duration'] + 1e-6)
@@ -108,20 +123,24 @@ class AnomalyDetectionPipeline :
             x['is_high_memory_duration_ratio']=x['is_high_memory_duration_ratio'].astype(int)
             x['is_peak_hour'] = x['hour'].between(9, 17).astype(int)
             x['query_length'] = x['query'].apply(len)
-            x['has_join'] = x['query'].str.contains('JOIN', case=False).astype(int)
+            x['has_join'] = x['query'].str.contains('JOIN', case=False,regex=True).astype(int)
             x['has_subselect'] = x['query'].str.contains('SELECT.*SELECT', case=False, regex=True).astype(int)
             x['has_union'] = x['query'].str.contains('UNION', case=False).astype(int)
             x['has_sleep'] = x['query'].str.contains('SLEEP', case=False).astype(int)
             x['has_truncate'] = x['query'].str.contains('TRUNCATE', case=False).astype(int)
             x['has_drop'] = x['query'].str.contains('DROP', case=False).astype(int)
+            x['has_delete'] = x['query'].str.contains('DELETE', case=False).astype(int)
             x['has_alter'] = x['query'].str.contains('ALTER', case=False).astype(int)
             x['has_insert'] = x['query'].str.contains('INSERT', case=False).astype(int)
             x['has_update'] = x['query'].str.contains('UPDATE', case=False).astype(int)
-            x['system_load'] = (x['cpu'] + x['memory']) / 2  # Corrected to average
+            x['system_load'] = (x['cpu'] + x['memory']) / 2 
             x['is_high_system_load'] = x['system_load'] > x['system_load'].quantile(0.95)
             x['is_high_system_load'] = x['is_high_system_load'].astype(int)
             x['is_high_io_wait'] = x['io_wait'] == 'Y'
             x['is_high_io_wait'] = x['is_high_io_wait'].astype(int)
+            x['num_joins'] = x['query'].str.count('JOIN')
+            x['query_complexity_score'] = x['has_join'] * 2 + x['has_subselect'] * 3 + x['has_union'] * 2  # Example scoring
+            x.fillna(method='bfill', inplace=True)
         except Exception as e:
             logging.error(f"Error occurred while creating features: {str(e)}")
         return x
@@ -209,44 +228,54 @@ class AnomalyDetectionPipeline :
     def assign_label(self, x: pd.DataFrame) -> pd.DataFrame:
         # here maybe we need to use deep learning instead of using normal key like model lstm
         def assign_anomalie(row):
-            anomalies=[]
-            if row['anomaly_scores'] == 1:
-                if row['is_high_cpu']==1:
-                    anomalies.append('high_cpu')
-                if row['is_high_memory']==1:
-                    anomalies.append('high_memory')
-                if row['is_high_read']==1:
-                    anomalies.append('high_read')
-                if row['is_high_write']==1:
-                    anomalies.append('high_write')
-                if row['is_high_cpu_memory_ratio']==1:
-                    anomalies.append('high_cpu_memory_ratio')
-                if row['is_high_read_write_ratio']==1:
-                    anomalies.append('high_read_write_ratio')
-                if row['is_high_cpu_duration_ratio']==1:
-                    anomalies.append('high_cpu_duration_ratio')
-                if row['is_high_memory_duration_ratio']==1:
-                    anomalies.append('high_memory_duration_ratio')
-                if row['is_long_query']==1:
-                    anomalies.append('long_query')
-                if row['state'] == 'active' and row['duration'] > 0.1:
-                    anomalies.append('stuck_active')
-                if row['wait'] == 'Y' and row['is_long_query'] == 1:
-                    anomalies.append('potential_deadlock')
-                if row['is_high_cpu'] and row['is_high_memory']:
-                    anomalies.append('high_resource_utilization')
-                if row['is_high_system_load'] == 1:
-                    anomalies.append('high_system_load')
-                if row['is_high_io_wait'] == 1:
-                    anomalies.append('high_io_wait')
-                if row['has_join'] == 1:
-                    anomalies.append('join_query_need_performance_tuning')
-                return ','.join(anomalies)
+            anomalies = []
+            if row['is_high_cpu'] == 1:
+                anomalies.append('High CPU Usage')
+            if row['is_high_memory'] == 1:
+                anomalies.append('High Memory Usage')
+            if row['is_high_read'] == 1:
+                anomalies.append('High Disk Read')
+            if row['is_high_write'] == 1:
+                anomalies.append('High Disk Write')
+            if row['is_high_cpu_memory_ratio'] == 1:
+                anomalies.append('High CPU to Memory Ratio')
+            if row['is_high_read_write_ratio'] == 1:
+                anomalies.append('High Read to Write Ratio')
+            if row['is_high_cpu_duration_ratio'] == 1:
+                anomalies.append('High CPU to Duration Ratio')
+            if row['is_high_memory_duration_ratio'] == 1:
+                anomalies.append('High Memory to Duration Ratio')
+            if row['is_long_query'] == 1:
+                anomalies.append('Long Running Query')
+            if row['state'] == 'active' and row['duration'] > 0.1:
+                anomalies.append('Stuck in Active State')
+            if row['wait'] == 'Y' and row['is_long_query'] == 1:
+                anomalies.append('Potential Deadlock')
+            if row['is_high_cpu'] and row['is_high_memory']:
+                anomalies.append('High Resource Utilization')
+            if row['is_high_system_load'] == 1:
+                anomalies.append('High System Load')
+            if row['is_high_io_wait'] == 1:
+                anomalies.append('High IO Wait')
+            if row['has_join'] == 1:
+                anomalies.append('Join Query Needs Optimization')
+            if row['avg_io_wait_time'] > 10:
+                anomalies.append('High IO Wait Time')
+            
+            if len(anomalies) == 0:
+                return 'Normal'
             else:
-                return 'normal'
+                return ", ".join(anomalies)
 
             
         x['type_anomalie'] = x.apply(assign_anomalie, axis=1)
+        x['type_anomalie_pos']=x['type_anomalie'].apply(lambda x: self.analyze_sentiment(x)['pos'] )
+        x['type_anomalie_neg']=x['type_anomalie'].apply(lambda x: self.analyze_sentiment(x)['neg'] )
+        x['type_anomalie_neu']=x['type_anomalie'].apply(lambda x: self.analyze_sentiment(x)['neu'] )
+        x['type_anomalie_compound']=x['type_anomalie'].apply(lambda x: self.analyze_sentiment(x)['compound'] )
+        x['type_anomalie_is_pos']=x['type_anomalie'].apply(lambda x: self.analyze_sentiment(x)['compound']>0 )
+
+
         
     def transform_for_model(self, x: pd.DataFrame) -> pd.DataFrame:
         x = self.createfeatures(x)
@@ -255,13 +284,19 @@ class AnomalyDetectionPipeline :
         return x
     def train_classifier(self, x: pd.DataFrame) -> pd.DataFrame:
         try:
+            ###
             self.final_data=self.detect_anomalies(x)
-            self.assign_label(self.final_data)
+            self.assign_label(self.final_data) 
+            self.misclassified_data = self.final_data[(self.final_data['anomaly_scores'] == 0) & (self.final_data['type_anomalie'] != 'Normal')]
+            logging.info(f"Number of misclassified data: {len(self.misclassified_data)/len(self.final_data):.2f}")
+            ###
             data=self.classification_trainer(self.final_data)
             return data
         except Exception as e:
             logging.error(f"Error occurred while fitting and transforming data: {str(e)}")
             return pd.DataFrame()
+    
+    
     def prepare_data_for_prediction(self, x: pd.DataFrame) -> pd.DataFrame:
         x = self.transform_for_model(x)
         self.scaler=self.all_models['scaler']
@@ -272,12 +307,14 @@ class AnomalyDetectionPipeline :
         x_train = self.scaler.transform(x[expected_features])
         x_tensor = tf.convert_to_tensor(x_train, dtype=tf.float32)
         self.autoencoder=self.all_models['autoencoder']
+        
         reconstruction = self.autoencoder.predict(x)
+        print(reconstruction)
         mse = tf.reduce_mean(tf.square(x_tensor - reconstruction), axis=1)
         autoencoder_scores = mse.numpy()
         self.isolation_forest=self.all_models['isolation_forest']
         isolation_features=self.isolation_forest.feature_names_in_
-        isolation_forest_scores = -self.isolation_forest.decision_function(x[expected_features])
+        isolation_forest_scores = -self.isolation_forest.decision_function(x[isolation_features])
         self.svm=self.all_models['one_class_svm']
         one_class_svm_features=self.svm.feature_names_in_
         one_class_svm_scores = -self.svm.decision_function(x[one_class_svm_features])
@@ -299,14 +336,18 @@ class AnomalyDetectionPipeline :
         return final_data
     def detect_anomalies(self, x):
         x = self.transform_for_model(x)# we use the same function to transform the data
+        x = x.fillna(method='bfill')  # Backward fill
         x_train = self.scaler.fit_transform(x) # when prediction we need to use the same scaler
             # Convert to tensor
         x_tensor = tf.convert_to_tensor(x_train, dtype=tf.float32)
-        input_dim = x.shape[1]
-        encoding_dim = 32
+        input_dim = x_train.shape[1]
+        encoding_dim = 64
         input_layer = Input(shape=(input_dim,))
-        encoder = Dense(encoding_dim, activation='relu')(input_layer)
-        decoder = Dense(input_dim, activation='sigmoid')(encoder)
+        flatten=Flatten()(input_layer)
+        encoder = Dense(encoding_dim, activation='relu')(flatten)
+        decoder = Dense( input_dim, activation='sigmoid')(encoder)
+        decoder = Reshape((input_dim,))(decoder)
+
         self.autoencoder = Model(inputs=input_layer, outputs=decoder)
         self.autoencoder.compile(optimizer='adam', loss='mse')
         early_stopping = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=3, restore_best_weights=True)
@@ -326,8 +367,12 @@ class AnomalyDetectionPipeline :
                 'one_class_svm': one_class_svm_scores
             })
         logging.info(combined_scores)
-        threshold_for_combined_scores = combined_scores.mean().mean() + 3 * combined_scores.std().mean()
-        anomaly_labels = combined_scores.mean(axis=1) >= threshold_for_combined_scores
+        kmeans = KMeans(n_clusters=2, random_state=42).fit(combined_scores)
+        centroids = kmeans.cluster_centers_
+        closest, _ = pairwise_distances_argmin_min(combined_scores, centroids)
+        distances = np.linalg.norm(combined_scores - centroids[closest], axis=1)
+        threshold_distance = np.percentile(distances, 95)
+        anomaly_labels = distances > threshold_distance
         logging.info(anomaly_labels)
         self.meta_model = LogisticRegression(random_state=42)
         params_knn = {'n_neighbors': np.arange(1, 25)}
@@ -371,7 +416,7 @@ class AnomalyDetectionPipeline :
         logging.info(f'Test Precision: {test_precision:.2f}')
         logging.info(f'Test Recall: {test_recall:.2f}')
         logging.info(f'Test F1 Score: {test_f1_score:.2f}')
-        self.final_data = pd.concat([x,  binary_anomalies], axis=1)
+        self.final_data = pd.concat([x,  anomaly_scores], axis=1)
         return self.final_data
     def classification_trainer(self, x: pd.DataFrame) -> pd.DataFrame:
         try:
@@ -417,11 +462,14 @@ class AnomalyDetectionPipeline :
             self.decision_tree_classifier=self.all_models['treeClassifier']
             features_tree = self.decision_tree_classifier.feature_names_in_
             x=self.prepare_data_for_prediction(x)
+            for feature in features_tree:
+                if feature not in x.columns:
+                    x[feature] = 0
             category_list = self.all_models['le_classes']
-            #x.drop('type_anomalie', axis=1, inplace=True)
             y_pred = self.decision_tree_classifier.predict(x[features_tree])
             y_pred_labels = [category_list[i] for i in y_pred]
             predictions_df = pd.DataFrame({'predicted_label': y_pred_labels})
+            logging.info(predictions_df['predicted_label'])
             return pd.concat([x.reset_index(drop=True), predictions_df], axis=1)
         except Exception as e:
             logging.error(f"Error occurred while transforming data: {str(e)}")
@@ -453,3 +501,22 @@ class AnomalyDetectionPipeline :
              return joblib.load(self.path)
         else :
             return {}
+if __name__ == "__main__":
+    activities=pd.read_csv('ProducerConsumer/Pg_activity_Data/activities.csv',sep=';')
+    anomaly_detection_pipeline = AnomalyDetectionPipeline(columns=activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor.pkl')
+    one_row = activities.iloc[0:1]
+    logging.info(one_row)
+    final=anomaly_detection_pipeline.final_predection(one_row.copy())
+    logging.info(final)
+    logging.info(f' anomalie predicted before class:: {final['anomaly_scores']}')
+    if (final['anomaly_scores'].values[0]==1):
+        logging.info(f' anomalie predicted after class:: {final["predicted_label"]}')
+    if (final['anomaly_scores'].values[0]==0 and final['predicted_label'].values[0]!='Normal'):
+         while(final['anomaly_scores'][0]==0 and final['predicted_label'][0]!='Normal'):
+            final_train=anomaly_detection_pipeline.train_classifier(activities.iloc[0:1000])
+            final=anomaly_detection_pipeline.final_predection(one_row)
+            logging.info(f' anomalie predicted before class:: {final["anomaly_scores"].values}')
+            if (final['anomaly_scores'].values[0]==1):
+                logging.info(f' anomalie predicted after class:: {final["predicted_label"]}')
+            if (final['anomaly_scores'].values[0]==0 and final['predicted_label'].values[0]=='Normal'):
+                break

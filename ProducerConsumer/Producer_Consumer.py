@@ -47,9 +47,10 @@ def ProducerConsumer():
     producer_process.join()
 
 def ExecuteProducerConsumer():
+     pass
    
-    while True :
-      ProducerConsumer()
+    #while True :
+      #ProducerConsumer()
 
 
 

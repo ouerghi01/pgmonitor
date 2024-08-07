@@ -158,7 +158,7 @@ class ConsumerVisualizer:
         self.message_count = 0
         self.emailSender=EmailSender()
         self.pipeline=AnomalyDetectionPipeline(columns=self.activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor.pkl')
-
+        #self.new_pieline=AnomalyDetectionPipeline(columns=self.activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor_1.pkl')
     
     def consume_messages(self):
       time.sleep(3)
@@ -173,18 +173,17 @@ class ConsumerVisualizer:
                      row_activity = row.copy() # use this for prediction
                      prediction = self.pipeline.final_predection(self.transform_row_data(row))
                      self.message_count+=1
-                     if prediction["predicted_label"][0]!="normal":
-                         print('Anomaly detected')
-                         print(row)
-                         self.emailSender.sendAnyData(json.dumps(
+                     
+                     print('Anomaly type:', prediction["predicted_label"])
+                     self.emailSender.sendAnyData(json.dumps(
                             {
                                'alert': prediction["predicted_label"],
                             }
                          ))
-                     
+                     row_activity['predicted_label'] = prediction["predicted_label"]
+                     row_activity['anomaly_scores'] = prediction["anomaly_scores"]
                      self.activities = pd.concat([self.activities, row_activity], ignore_index=True)
-                     self.activities['predicted_label'] = prediction["predicted_label"]
-                     self.activities['anomaly_scores'] = prediction["anomaly_scores"]
+                     
                      '''
                      if self.activities.shape[0] > 10:
                           if "predicted_label" and "anomaly_scores" in self.activities.columns:
