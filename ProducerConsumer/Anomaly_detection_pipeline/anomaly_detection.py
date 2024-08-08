@@ -1,5 +1,11 @@
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
+from tensorflow.keras.layers import Layer, LSTM, Dense, Input, Flatten, Attention,Reshape # type: ignore
+from tensorflow.keras.models import Model # type: ignore
+import tensorflow as tf # type: ignore
+import keras
+from keras.saving import register_keras_serializable  # type: ignore
+import tensorflow.keras.backend as K # type: ignore
+from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer # type: ignore
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.metrics import pairwise_distances_argmin_min
 from sklearn.cluster import KMeans
@@ -21,9 +27,7 @@ import joblib
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import  LabelEncoder
 from sklearn.svm import  OneClassSVM
-import tensorflow as tf
-from tensorflow.keras.layers import Input, Dense  ,Flatten ,Reshape #   type: ignore
-from tensorflow.keras.models import Model # type: ignore
+
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_recall_fscore_support # type: ignore
 import logging 
@@ -34,6 +38,48 @@ from pprint import pprint
 from nltk.sentiment import SentimentIntensityAnalyzer
 # Setup logging
 logging.basicConfig(level=logging.INFO)
+
+
+@register_keras_serializable()
+
+class attention(tf.keras.layers.Layer):
+    def __init__(self ,**kwargs):
+        super(Attention, self).__init__(**kwargs)
+    def build(self, input_shape):
+        self.W=self.add_weight(name="att_weight",shape=(input_shape[-1],1),initializer="normal")
+        self.b=self.add_weight(name="att_bias",shape=(input_shape[1],1),initializer="zeros")    
+        super(attention,self).build(input_shape)
+    def call(self, inputs):
+        et=K.squeeze(K.tanh(K.dot(inputs,self.W)+self.b),axis=-1)
+        at=K.softmax(et)
+        at=K.expand_dims(at,axis=-1)
+        output=inputs*at
+        return K.sum(output,axis=1)
+    def compute_output_shape(self, input_shape):
+        return (input_shape[0],input_shape[-1])
+    @classmethod
+    def get_config(self):
+        config = super(Attention, self).get_config()
+        return config
+
+@register_keras_serializable()
+class MyLSTMLayer(tf.keras.layers.Layer):
+    def __init__(self, units, **kwargs):
+        super(MyLSTMLayer, self).__init__(**kwargs)
+        self.units = units
+        self.lstm = tf.keras.layers.LSTM(units, activation='relu', return_sequences=True)
+
+    def call(self, inputs):
+        return self.lstm(tf.expand_dims(inputs, axis=1))
+    
+    
+    def get_config(self):
+        config = super(MyLSTMLayer, self).get_config()
+        config.update({"units": self.units})
+        return config
+    @classmethod
+    def from_config(cls,config):
+        return cls(**config)
 class AnomalyDetectionPipeline :
     def __init__(self,columns=None,path=None) :
         self.columns  = columns
@@ -52,6 +98,7 @@ class AnomalyDetectionPipeline :
         self.rf=None
         self.ensemble=None
         self.all_models=self.load()
+     
         self.decision_tree_classifier=None
         self.count_vect = None
         self.vocab = []
@@ -340,14 +387,19 @@ class AnomalyDetectionPipeline :
         x_train = self.scaler.fit_transform(x) # when prediction we need to use the same scaler
             # Convert to tensor
         x_tensor = tf.convert_to_tensor(x_train, dtype=tf.float32)
+        # Define model architecture
         input_dim = x_train.shape[1]
         encoding_dim = 64
+        
         input_layer = Input(shape=(input_dim,))
-        flatten=Flatten()(input_layer)
-        encoder = Dense(encoding_dim, activation='relu')(flatten)
-        decoder = Dense( input_dim, activation='sigmoid')(encoder)
+        flatten = Flatten()(input_layer)
+        lstm = MyLSTMLayer(20)(flatten)
+        encoder = Dense(encoding_dim, activation='relu')(lstm)
+        
+        attention_layer = Attention()([encoder,encoder])
+        decoder = Dense(input_dim, activation='sigmoid')(attention_layer)
         decoder = Reshape((input_dim,))(decoder)
-
+        
         self.autoencoder = Model(inputs=input_layer, outputs=decoder)
         self.autoencoder.compile(optimizer='adam', loss='mse')
         early_stopping = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=3, restore_best_weights=True)
@@ -498,17 +550,27 @@ class AnomalyDetectionPipeline :
             joblib.dump(data, f)
     def load(self):
         if (os.path.exists(self.path)):
-             return joblib.load(self.path)
+             return keras.models.load_model(
+                 self.path,
+                 custom_objects={
+                     'tf': tf,
+                     "attention":attention,
+                     "MyLSTMLayer": MyLSTMLayer
+                 }
+                     
+             )
         else :
             return {}
-if __name__ == "__main__":
+        '''
+        if __name__ == "__main__":
     activities=pd.read_csv('ProducerConsumer/Pg_activity_Data/activities.csv',sep=';')
-    anomaly_detection_pipeline = AnomalyDetectionPipeline(columns=activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor.pkl')
+    anomaly_detection_pipeline = AnomalyDetectionPipeline(columns=activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor.h5')
+    train_data=anomaly_detection_pipeline.train_classifier(activities.iloc[0:1000])
     one_row = activities.iloc[0:1]
     logging.info(one_row)
     final=anomaly_detection_pipeline.final_predection(one_row.copy())
     logging.info(final)
-    logging.info(f' anomalie predicted before class:: {final['anomaly_scores']}')
+    logging.info(f' anomalie predicted before class:: {final['anomaly_scores'][0]}')
     if (final['anomaly_scores'].values[0]==1):
         logging.info(f' anomalie predicted after class:: {final["predicted_label"]}')
     if (final['anomaly_scores'].values[0]==0 and final['predicted_label'].values[0]!='Normal'):
@@ -520,3 +582,5 @@ if __name__ == "__main__":
                 logging.info(f' anomalie predicted after class:: {final["predicted_label"]}')
             if (final['anomaly_scores'].values[0]==0 and final['predicted_label'].values[0]=='Normal'):
                 break
+        
+        '''

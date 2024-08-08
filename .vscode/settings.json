@@ -21,6 +21,7 @@
         "infile",
         "joblib",
         "kmeans",
+        "linalg",
         "nbins",
         "nrows",
         "pgbench",
