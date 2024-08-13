@@ -5,19 +5,30 @@ import json
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from sql_metadata import Parser
 import os
-import multiprocessing
+import time
 import csv
 
 class EmailSender:
     def __init__(self):
         self.dbname = "bench"
-        self.user = "aziz"
+        self.user = "postgres"
         self.password = "123"
         self.email="mohamedaziz.ouerghi@etudiant-enit.utm.tn"
         self.password_email="14656747"
         self.to_email=self.email
-        self.conn = psycopg2.connect(f"dbname={self.dbname} user={self.user} password={self.password}")
+        try:
+            self.conn = psycopg2.connect(
+                dbname=self.dbname,
+                user=self.user,
+                password=self.password,
+                host='localhost',
+                port='5432'
+            )
+            print("Connection established.")
+        except psycopg2.OperationalError as e:
+            print(f"Error connecting to database: {e}")
         self.conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         self.cur = self.conn.cursor()
         self.cur.execute("LISTEN query_changes;")
@@ -39,16 +50,24 @@ class EmailSender:
         FOR EACH ROW EXECUTE FUNCTION notify_trigger();
          """)
         print(f"Trigger created for table: {table_name}")
-    def collect_pg_stat_statements(self):
-        self.cur.execute("SELECT * FROM pg_stat_statements;")
+    #Get Running Queries (And Lock statuses) in PostgreSQL
+  
+
+    
+    def collect(self,query,name_file):
+        
+        self.cur.execute(query)
         new_data = self.cur.fetchall()
         col_names = [desc[0] for desc in self.cur.description]
-        file_exists = os.path.isfile("pg_stat_statements.csv")
-        with open("pg_stat_statements.csv", "a", newline='') as f:
+        #col_names = [desc[0] for desc in self.cur.description]
+        file_exists = os.path.isfile(name_file)
+        with open(name_file, "a", newline='') as f:
             writer = csv.writer(f)
             if not file_exists:
                 writer.writerow(col_names) 
             writer.writerows(new_data)
+        print(f"Data collected from query: {query}")
+        col_names.clear()
     def sendEmail(self, body):
         try:
           payload = json.loads(body)
@@ -106,6 +125,3 @@ def NotificationOn():
    print("notify started")
    emailSender=EmailSender()
    emailSender.run()
-def CollectPgStatStatements():
-    emailSender=EmailSender()
-    emailSender.collect_pg_stat_statements()

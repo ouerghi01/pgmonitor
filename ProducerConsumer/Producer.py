@@ -1,9 +1,17 @@
 import subprocess
 from kafka import KafkaProducer
+import logger
+from datetime import datetime
+import asyncpg
+import asyncio
+import logging
 import csv
 import random
 import json
 import os
+import psycopg2
+from concurrent.futures import ThreadPoolExecutor
+from aiokafka import AIOKafkaProducer
 import time
 from multiprocessing import Event, Process, Manager,Queue
 from watchdog.observers import Observer
@@ -11,7 +19,122 @@ from watchdog.events import FileSystemEvent, PatternMatchingEventHandler
 import  watchdog
 import getpass
 import subprocess
+import threading as thread
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
+class QueryTracker:
+    _instance = None
+    _connection_pool = None
+    dbname = "bench"
+    user = "postgres"
+    password = "123"
+    db_params = {
+                'database': dbname,
+                'user': user,
+                'password': password,
+                'host': 'localhost',
+                'port': '5432'
+            }
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(QueryTracker, cls).__new__(cls)
+        return cls._instance
+    def __init__(self,event_stop,topic="query-monitoring"):
+        if not hasattr(self, 'initialized'):
+          
+            self.ai_producer=None
+            self.topic = topic
+            self.thread_pool = ThreadPoolExecutor(max_workers=10)
+            self.initialized = False
+            self.event_stop = event_stop
+            self.queries=[
+                ('pg_stat_activity', 'SELECT * FROM pg_stat_activity;'),
+                ('pg_stat_user_tables','''
+    SELECT
+        s.schemaname,
+        s.relname AS table_name,
+        pg_size_pretty(pg_total_relation_size(s.relid)) AS total_size,
+        pg_size_pretty(pg_relation_size(s.relid)) AS table_size,
+        pg_size_pretty(pg_total_relation_size(s.relid) - pg_relation_size(s.relid)) AS indexes_size,
+        s.seq_scan AS sequential_scans,
+        s.idx_scan AS index_scans
+    FROM
+        pg_stat_user_tables s
+    ORDER BY
+        pg_total_relation_size(s.relid) DESC;
+
+    ''')
+            ]
+    
+    async def setup(self):
+        if not self.initialized:
+            self.ai_producer = AIOKafkaProducer(
+                bootstrap_servers='localhost:9092',
+                value_serializer=lambda v: json.dumps(v, default=str).encode('utf-8'),enable_idempotence=True
+            )
+            await self.ai_producer.start()
+            self.initialized = True
+    
+    @classmethod
+    async def establish_connection(cls):
+        if not cls._connection_pool:
+           try:
+              cls._connection_pool = await asyncpg.create_pool(
+                    **cls.db_params,
+                    max_size=100,
+                    min_size=50
+                )
+              logger.info("Database pool connection opened")
+           except Exception as e:
+                logger.exception("Error establishing database connection pool: %s", e)
+        return cls._connection_pool
+    async def run_query(self, query):
+        if not self._connection_pool:
+            await self.establish_connection()
+        query_type, query_string = query
+        
+        try:
+            async with self._connection_pool.acquire() as conn:
+                rows = await conn.fetch(query_string)
+                if not rows:
+                    return
+                result = [dict(row) for row in rows]  # convert rows to dictionaries
+                for item in result:
+                    for key, value in item.items():
+                        if isinstance(value, datetime):
+                            item[key] = value.isoformat()
+                await self.ai_producer.send(
+                    self.topic,
+                    key=f"{random.randrange(999)}".encode(),
+                    value={
+                        "type_query": query_type,
+                        "data": result
+                    }
+                )
+        except Exception as e:
+            logger.error("Error occurred while sending data to Kafka: %s", str(e))
+            raise
+        
+    async def close(self):
+        if self._connection_pool:
+            try:
+                await self._connection_pool.close()
+                logger.info("Database pool connection closed")
+            except Exception as e:
+                logger.exception("Error closing database pool connection: %s", e)
+        else:
+            logger.warning("Connection pool was not initialized or already closed")
+            
+    async def run_queries(self):
+        await self.setup()
+        tasks = [self.run_query(query) for query in self.queries]
+        results=await asyncio.gather(*tasks,return_exceptions=True)
+        for result in results:
+            if isinstance(result, Exception):
+                logger.error("Error occurred during query execution: %s", str(result))
+        
 def run_performance_test():
     bash_script_path = 'ProducerConsumer/pg_activity.sh'
     if not os.path.exists(bash_script_path):
@@ -88,17 +211,29 @@ class Handler(PatternMatchingEventHandler):
                         "state": parts[13].strip('"'),
                         "query": ";".join(parts[14:]).strip('"'),
                     }
-                    print(record)
                     self.producer.send(topic='db-monitoring', key=f"{random.randrange(999)}".encode(), value=record)
         except FileNotFoundError as e:
             print(f"Error: {e}")
             self.event_stop.set()
-        
+async def query_monitoring_task(event_stop):
+    query_tracker = QueryTracker(event_stop)
+    try:
+        while not query_tracker.event_stop.is_set():
+           await query_tracker.run_queries()
+    finally:
+        await query_tracker.close()
+        print("Connection closed.")
+        event_stop.set()
+        return
+def start_query_monitoring(event_stop):
+    asyncio.run(query_monitoring_task(event_stop))
 def Producer_Data_Monitoring(event_stop, temp_filename):
+    process_query_monitoring = Process(target=start_query_monitoring, args=(event_stop,))
     event_handler = Handler(event_stop)
     observer = watchdog.observers.Observer()
     observer.schedule(event_handler, path=temp_filename, recursive=False)
     observer.start()
+    process_query_monitoring.start()
     try:
         while observer.is_alive():
             observer.join(1)
@@ -106,5 +241,11 @@ def Producer_Data_Monitoring(event_stop, temp_filename):
         event_stop.set()
         observer.stop()
         event_handler.close()
-    observer.join()
+        observer.join()
+        process_query_monitoring.join()
+    finally:
+        if observer.is_alive():
+            observer.stop()
+            observer.join()
+
 

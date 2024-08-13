@@ -43,20 +43,31 @@ logging.basicConfig(level=logging.INFO)
 @register_keras_serializable()
 
 class attention(tf.keras.layers.Layer):
-    def __init__(self ,**kwargs):
+    def __init__(self ,selected_features,**kwargs):
         super(Attention, self).__init__(**kwargs)
+        self.selected_features=selected_features
     def build(self, input_shape):
-        self.W=self.add_weight(name="att_weight",shape=(input_shape[-1],1),initializer="normal")
-        self.b=self.add_weight(name="att_bias",shape=(input_shape[1],1),initializer="zeros")    
+        feature_dim=input_shape[1][-1]
+        self.attention_weights = self.add_weight(
+            shape=(feature_dim,),
+            initializer='uniform',
+            trainable=True,
+            name='attention_weights'
+        ) 
         super(attention,self).build(input_shape)
     def call(self, inputs):
-        et=K.squeeze(K.tanh(K.dot(inputs,self.W)+self.b),axis=-1)
-        at=K.softmax(et)
-        at=K.expand_dims(at,axis=-1)
-        output=inputs*at
-        return K.sum(output,axis=1)
+        if self.selected_features:
+            attention_scores = tf.reduce_sum(
+                inputs[:, self.selected_features] * self.attention_weights[self.selected_features], axis=-1
+            )
+        else:
+            attention_scores = tf.reduce_sum(inputs * self.attention_weights, axis=-1)
+        
+        attention_scores = tf.nn.softmax(attention_scores, axis=1)
+        weighted_inputs = inputs * tf.expand_dims(attention_scores, -1)
+        return tf.reduce_sum(weighted_inputs, axis=1)
     def compute_output_shape(self, input_shape):
-        return (input_shape[0],input_shape[-1])
+        return (input_shape[0], input_shape[1][0])
     @classmethod
     def get_config(self):
         config = super(Attention, self).get_config()
@@ -98,7 +109,6 @@ class AnomalyDetectionPipeline :
         self.rf=None
         self.ensemble=None
         self.all_models=self.load()
-     
         self.decision_tree_classifier=None
         self.count_vect = None
         self.vocab = []
@@ -395,8 +405,9 @@ class AnomalyDetectionPipeline :
         flatten = Flatten()(input_layer)
         lstm = MyLSTMLayer(20)(flatten)
         encoder = Dense(encoding_dim, activation='relu')(lstm)
+        features_tfidf=self.tf_idf.feature_names_in_
         
-        attention_layer = Attention()([encoder,encoder])
+        attention_layer = Attention(selected_features=list(features_tfidf))([encoder,encoder])
         decoder = Dense(input_dim, activation='sigmoid')(attention_layer)
         decoder = Reshape((input_dim,))(decoder)
         
@@ -557,12 +568,11 @@ class AnomalyDetectionPipeline :
                      "attention":attention,
                      "MyLSTMLayer": MyLSTMLayer
                  }
-                     
              )
         else :
             return {}
-        '''
-        if __name__ == "__main__":
+        
+if __name__ == "__main__":
     activities=pd.read_csv('ProducerConsumer/Pg_activity_Data/activities.csv',sep=';')
     anomaly_detection_pipeline = AnomalyDetectionPipeline(columns=activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor.h5')
     train_data=anomaly_detection_pipeline.train_classifier(activities.iloc[0:1000])
@@ -583,4 +593,4 @@ class AnomalyDetectionPipeline :
             if (final['anomaly_scores'].values[0]==0 and final['predicted_label'].values[0]=='Normal'):
                 break
         
-        '''
+        

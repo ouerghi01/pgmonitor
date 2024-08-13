@@ -5,14 +5,14 @@ import time
 import os 
 import psutil
 import threading
-
+import asyncio
 
      
 
 def consumer(event_stop):
     print('Consumer started')
     
-    Consumer_Data_Monitoring()
+    Consumer_Data_Monitoring(event_stop)
 
 filename=None 
 pid=None 
@@ -34,23 +34,17 @@ def producer(event_stop):
     
 
 def ProducerConsumer():
-    event_stop = threading.Event() 
-    # Start consumer and producer processes
+    event_stop = asyncio.Event() 
     consumer_process = Process(target=consumer, args=(event_stop,))
     producer_process = Process(target=producer, args=(event_stop, ))
-    
     consumer_process.start()
     producer_process.start()
-    
-    # Wait for all processes to complete
     consumer_process.join()
     producer_process.join()
 
 def ExecuteProducerConsumer():
-     pass
-   
-    #while True :
-      #ProducerConsumer()
+     while True :
+      ProducerConsumer()
 
 
 

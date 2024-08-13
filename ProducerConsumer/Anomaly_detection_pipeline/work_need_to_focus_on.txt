@@ -2,6 +2,7 @@
 
     Custom Metrics: Define and monitor custom metrics specific to your PostgreSQL setup.
     Alert System: Implement a supervised model to classify the severity of alerts based on custom metrics.
+    (done)
 
 2. Capacity Planning
 
@@ -48,3 +49,20 @@ Practical Steps
     Integration: Integrate your models into your monitoring systems to provide actionable insights and automate responses to potential issues.
 
     Documentation and Reporting: Document your findings, model performance, and any insights gained. Create reports to share with your team or stakeholders.
+----------------------------------------------------------------
+2. SQL-Specific Feature Extraction
+
+    Parse Tree Analysis: SQL queries can be parsed into a tree structure representing the syntax and relationships between elements (tables, columns, etc.). You can then extract features based on the structure (e.g., number of joins, types of subqueries).
+        Implementation: Use SQL parsers like sqlparse or sqlglot to parse the query and then traverse the parse tree to extract features.
+
+    Query Plan Analysis: Extract features based on the SQL execution plan (e.g., cost, number of operations). This is useful if you have access to the query execution plans, which give insight into how the query will be executed by the database.
+        Implementation: You would need to run EXPLAIN on the queries and then parse the result.
+
+    Query Complexity Metrics: Metrics like the number of tables, the depth of subqueries, the number of columns selected, etc., can be used as features. These are domain-specific and require custom extraction logic.
+        Implementation: You can manually code this by parsing SQL queries with sqlparse and counting these elements.
+----------------------------------------------------------------
+https://medium.com/@sasidharc/build-sql-parser-using-antlr4-part2-1f8cdb011721
+https://percona.community/blog/2023/04/25/postgresql-query-optimization-with-python-and-pgbouncer/
+https://medium.com/@sasidharc/build-sql-parser-using-antlr4-part1-2044916a8406
+https://www.python4data.science/en/24.1.0/data-processing/postgresql/performance.html
+https://kavitmht.medium.com/building-a-real-time-data-streaming-pipeline-using-apache-kafka-flink-and-postgres-a22101c97895
