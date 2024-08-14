@@ -43,7 +43,6 @@ class QueryTracker:
         return cls._instance
     def __init__(self,event_stop,topic="query-monitoring"):
         if not hasattr(self, 'initialized'):
-          
             self.ai_producer=None
             self.topic = topic
             self.thread_pool = ThreadPoolExecutor(max_workers=10)
@@ -67,7 +66,6 @@ class QueryTracker:
 
     ''')
             ]
-    
     async def setup(self):
         if not self.initialized:
             self.ai_producer = AIOKafkaProducer(
@@ -76,7 +74,6 @@ class QueryTracker:
             )
             await self.ai_producer.start()
             self.initialized = True
-    
     @classmethod
     async def establish_connection(cls):
         if not cls._connection_pool:

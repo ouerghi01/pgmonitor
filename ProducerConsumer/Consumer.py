@@ -95,7 +95,6 @@ class ConsumerVisualizer:
               for _, msgs in messages.items():
                   for message in msgs:
                      topic=message.topic
-                     print("topic 1 :",topic)
                      func_dict={"db-monitoring":self.handle_anomaly}
                      func_dict[topic](message)
 
@@ -107,7 +106,6 @@ class ConsumerVisualizer:
 
            async for message in self.ai_consumer:
             topic=message.topic
-            print("topic 2 :",topic)
             func_dict={"query-monitoring":self.handle_query}
             func_dict[topic](message)
         except Exception as e:
@@ -417,9 +415,9 @@ class ConsumerVisualizer:
         @self.app.callback(
             Output("top_10_queries", "figure"),
             Output("query_execution_time_distribution", "figure"),
-            [Input("url", "pathname"),Input("time-slider", "value"),Input('interval', 'n_intervals')],
+            [Input("url", "pathname"),Input("time-slider", "value")],
         )
-        def update_query_performance(n, selected_range,n1):
+        def update_query_performance(n, selected_range):
             if n == "/Query_Performance":
                 # Convert `datetimeutc` to timezone-naive datetime
                 self.activities['datetimeutc'] = pd.to_datetime(self.activities['datetimeutc']).dt.tz_localize(None)
@@ -467,9 +465,9 @@ class ConsumerVisualizer:
             Output("line_chart","figure"),
             Output("queries_executed_by_different_users","figure"),
             Output("stacked_bar_chart","figure"),
-            [Input("url", "pathname"),Input('interval', 'n_intervals')],
+            [Input("url", "pathname")],
         )
-        def update_activities_table(n,n1):
+        def update_activities_table(n):
             if n == "/Activity_Monitoring":
                 pg_stat_activity=self.pg_stat_activity.copy()
                 pg_stat_activity['query_start']=pd.to_datetime(pg_stat_activity['query_start'])
@@ -521,28 +519,36 @@ class ConsumerVisualizer:
             Output("pie_chart", "figure"),
             Output("category_title", "children"),
             Output("system_load_line", "figure"),
-            [Input("url","pathname"),Input('interval', 'n_intervals'), Input("values", "value"), Input("load_parameters_y", "value")],
+            [Input("url","pathname"), Input("values", "value"), Input("load_parameters_y", "value")],
         )
-        def update_overview_chart(n,n1,value,value_y):
+        def update_overview_chart(n,value,value_y):
             try:
                 if n != "/Overview":
                     return {}, "",{}
                 elif value and value_y is None:
                     return {}, "Table Overview",{}
                 
-                def remove_MB_KB(value):
-                    return str(value.replace(' MB', '').replace(' kB', '').replace(' bytes','').strip())
-                for column in ['cpu', 'memory', 'read', 'write']:
-                      self.activities[column] = pd.to_numeric(self.activities[column], errors='coerce', downcast='float')
-                data_by_table = self.pg_stat_user_tables[['table_name','schemaname', value]].copy()
-                data_by_table[value] = data_by_table[value].apply(lambda x: remove_MB_KB(x))
-                data_by_table[value] = pd.to_numeric(data_by_table[value], downcast='float')
-                
-                self.activities['query']=self.activities['query'].apply(lambda x:x[:5])
-                self.activities['duration']=pd.to_numeric(self.activities['duration'],downcast='float')
-                self.activities['info']='Duration: '+self.activities['duration'].astype(str)+'s, Wait: '+self.activities['wait'].astype(str)+'s'
-                data_operations = self.activities.groupby(['query','info'],as_index=False).agg({'cpu': 'mean', 'memory': 'mean', 'write': 'mean', 'read': 'mean'}).reset_index().head(10)
-                
+                try:
+
+                    def remove_MB_KB(value):
+                        return str(value.replace(' MB', '').replace(' kB', '').replace(' bytes','').strip())
+                    if(self.activities.shape[0] > 0):
+                       for column in ['cpu', 'memory', 'read', 'write']:
+                           self.activities[column] = pd.to_numeric(self.activities[column], errors='coerce', downcast='float')
+                    else:
+                        raise ValueError
+                    data_by_table = self.pg_stat_user_tables[['table_name','schemaname', value]].copy()
+                    
+                    data_by_table[value] = data_by_table[value].apply(lambda x: remove_MB_KB(x))
+                    data_by_table[value] = pd.to_numeric(data_by_table[value], downcast='float')
+                    
+                    self.activities['query']=self.activities['query'].apply(lambda x:x[:5])
+                    self.activities['duration']=pd.to_numeric(self.activities['duration'],downcast='float')
+                    self.activities['info']='Duration: '+self.activities['duration'].astype(str)+'s, Wait: '+self.activities['wait'].astype(str)+'s'
+                    data_operations = self.activities.groupby(['query','info'],as_index=False).agg({'cpu': 'mean', 'memory': 'mean', 'write': 'mean', 'read': 'mean'}).reset_index().head(10)
+                except Exception as e:
+                    print(e)
+                    raise e
                 threshold_size = 200
                 exceeding_tables = data_by_table[data_by_table[value] > threshold_size]['table_name'].tolist()
                 
@@ -600,7 +606,6 @@ class ConsumerVisualizer:
             except Exception as e:
                 print(e)
                 raise e
-                return {}, "Table Overview",{}
         self.app.run_server(debug=False)
          
     def Consumer_Data_Monitoring(self):
