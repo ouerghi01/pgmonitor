@@ -3,7 +3,6 @@ from ProducerConsumer.Producer_Consumer import ExecuteProducerConsumer
 from ProducerConsumer.Notify import NotificationOn
 from ProducerConsumer.Producer import run_performance_test
 import multiprocessing 
-import time
 import ray 
 def runDBStressMonitor():
     db_stress_monitor = multiprocessing.Process(target=DBStressMonitor)
@@ -21,7 +20,6 @@ if __name__ == "__main__":
     try:
         while True:
             runDBStressMonitor()
-            time.sleep(5)  
     except KeyboardInterrupt:
         print("Program interrupted. Shutting down...")
         ray.shutdown()
