@@ -1,9 +1,14 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from dash  import Dash , dcc , html,dash_table,callback,Output,Input 
+import tensorflow.keras.backend as K # type: ignore
+
 from aiokafka import AIOKafkaConsumer
 import re 
 import asyncio
+import os
+os.environ['PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT'] = '10'  # Increase timeout to 1 second
+
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import dash_bootstrap_components as dbc
@@ -29,6 +34,9 @@ class ConsumerVisualizer:
     def __init__(self,_event_stop):
        
         self.thread_pool = ThreadPoolExecutor(max_workers=10)
+        self.pie_chart={}
+        self.option_default = 'total_size'
+        self.system_load_line={}
         self.consumer =KafkaConsumer("db-monitoring", bootstrap_servers='localhost:9092',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
         self.ai_consumer = None
         self.activities = pd.DataFrame(columns=['datetimeutc', 'pid', 'database', 'appname', 'user', 'client', 'cpu', 'memory', 'read', 'write', 'duration', 'wait', 'io_wait', 'state', 'query'])
@@ -64,18 +72,19 @@ class ConsumerVisualizer:
                     html.Div(id="page-content"),
                 ], width=10),
             ]),
-            dcc.Interval(id='interval', interval=100*1000, n_intervals=0)  # Correct placement
+            dcc.Interval(id='interval', interval=10*1000, n_intervals=0)  # Correct placement
         ])
 
         self.data_lock = threading.Lock()
         self.activities_queue = Queue()
         self.pg_stat_user_tables_queue = Queue()
+        self.pg_stat_activity_queue=Queue()
         self.event_stop = _event_stop
         self.retrain_interval = 100  # Retrain after every 100 messages
         self.message_count = 0
         self.emailSender=EmailSender()
         self.initialized=False
-        #self.pipeline=AnomalyDetectionPipeline(columns=self.activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor.pkl')
+        self.pipeline=AnomalyDetectionPipeline(columns=self.activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor.h5')
         #self.new_pieline=AnomalyDetectionPipeline(columns=self.activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor_1.pkl')
     async def setup(self):
         if not self.initialized:
@@ -90,10 +99,10 @@ class ConsumerVisualizer:
        
 
     def consume_messages(self):
+      time.sleep(10)
       while not self.event_stop.is_set():
-        messages = self.consumer.poll(timeout_ms=1000)
+        messages = self.consumer.poll(timeout_ms=10000)
         if messages:
-            with self.data_lock:
               for _, msgs in messages.items():
                   for message in msgs:
                      topic=message.topic
@@ -129,6 +138,7 @@ class ConsumerVisualizer:
             new_row = pd.DataFrame([item])
             with self.data_lock:
                 self.pg_stat_activity = pd.concat([self.pg_stat_activity, new_row], ignore_index=True)
+                self.pg_stat_activity_queue.put(('pg_stat_activity',self.pg_stat_activity))
     def process_data_pg_stat_user_tables(self,record):
         for item in record:
             new_row = pd.DataFrame([item])
@@ -138,20 +148,13 @@ class ConsumerVisualizer:
     def handle_anomaly(self, message):
         data = message.value 
         row=pd.DataFrame([data])
-        row_activity = row.copy() # use this for prediction
-        #prediction = self.pipeline.final_predection(self.transform_row_data(row))
-        self.message_count+=1
-                     
-        #print('Anomaly type:', prediction["predicted_label"])
-        #self.emailSender.sendAnyData(json.dumps(
-                            #{
-                            #   'alert': prediction["predicted_label"],
-                            #}
-                         #))
-        #row_activity['predicted_label'] = prediction["predicted_label"]
-        #row_activity['anomaly_scores'] = prediction["anomaly_scores"]
-        self.activities = pd.concat([self.activities, row_activity], ignore_index=True)
-        self.activities_queue.put(('activity',self.activities))
+        print(row)
+        row_activity = row.copy()
+        future=self.thread_pool.submit(self.pipeline.final_prediction,self.transform_row_data(row))
+        prediction=future.result()
+        queue_pred=Queue()
+        queue_pred.put(('prediction',prediction))
+        self.thread_pool.submit(self.handle_activity,row_activity,queue_pred)
                      
         '''
                      if self.activities.shape[0] > 10:
@@ -167,6 +170,13 @@ class ConsumerVisualizer:
                           #thread_retain=threading.Thread(target=self.retrain_models)
                           #thread_retain.start()
                      '''
+
+    def handle_activity(self, row_activity, queue_pred):
+        prediction = queue_pred.get()[1]
+        self.message_count+=1           
+        row_activity['predicted_label'] = prediction["predicted_label"]
+        self.activities = pd.concat([self.activities, row_activity], ignore_index=True)
+        self.activities_queue.put(('activity',self.activities))
                      
         #self.convert_activities()
     def retrain_models(self):
@@ -233,23 +243,26 @@ class ConsumerVisualizer:
                                 html.H4(id="category_title", style={"text-align": "center", "color": "blue"}),
                                 dcc.Graph(
                                     id="pie_chart",
-                                    figure={}
+                                    figure=self.pie_chart,
                                 ),
                                 dcc.Dropdown(
                                     id="values",
                                     options=[{'label': 'Total Size', 'value': 'total_size'},{'label': 'Table Size', 'value': 'table_size'},{'label': 'Indexes Size', 'value': 'indexes_size'}],
-                                    value='total_size',
+                                    value=self.option_default,
                                     clearable=False,
                                     
                                 ),
                             ],
                             width=4,
                             
-                        ),
-                        dbc.Col(
+                        )
+                    ]),
+                    dbc.Row(
+                        [
+                            dbc.Col(
                             [
                                 html.H4("Postgres Activities"),
-                                dcc.Graph(id='system_load_line', figure={}),
+                                dcc.Graph(id='system_load_line', figure=self.system_load_line),
                                 dcc.Dropdown(
                                     id='load_parameters_y',
                                     options=[
@@ -261,7 +274,7 @@ class ConsumerVisualizer:
                                     clearable=False
                                 ),
                             ],
-                            width=8,
+                            width=12,
                             style={
                                 "padding": "1rem",
                                 "background-color": "#f8f9fa",
@@ -270,7 +283,8 @@ class ConsumerVisualizer:
                                 "margin-bottom": "1rem",  # Space below the column
                             }
                         )
-                    ])
+                        ]
+                    )
                 ])
             elif n == "/Query_Performance":
                 activities=self.activities_queue.get()[1]
@@ -496,7 +510,9 @@ class ConsumerVisualizer:
         )
         def update_activities_table(n,n1):
             if n == "/Activity_Monitoring":
-                pg_stat_activity=self.pg_stat_activity.copy()
+                pg_stat_activity=self.pg_stat_activity_queue.get()[1]
+                activities=self.activities_queue.get()[1]
+                pg_stat_activity.dropna()
                 pg_stat_activity['query_start']=pd.to_datetime(pg_stat_activity['query_start'])
                 df_choropleth=pg_stat_activity.groupby(['client_addr','query']).size().reset_index(name='count')
                 choropleth_fig=px.choropleth(df_choropleth,locations='client_addr',locationmode='ISO-3',color='count',hover_name='client_addr',title='Client Address Distribution')
@@ -509,7 +525,7 @@ class ConsumerVisualizer:
                 line_fig = px.line(df_line, x='query_start', y='query_count', title='Query Activity Over Time')
                 area_fig = px.area(df_line, x='query_start', y='query_count', title='Volume of Queries Over Time',line_group='query',color="query",labels={'query_start':'Time','query_count':'Query Count'})
                 stacked_bar_fig = px.bar(df_bar, x='usename', y='query_count', color='backend_type', title='Queries by User and Backend Type', labels={'usename': 'User', 'query_count': 'Query Count'})
-                currently_active_queries=self.activities[self.activities['state']=='active'][['query','state','duration']]
+                currently_active_queries=activities[activities['state']=='active'][['query','state','duration']]
                 area_fig.update_traces(hovertemplate='<b>Time:</b> %{x}<br><b>Query Count:</b> %{y}<br><b>Queries:</b><br>%{customdata[0]}<extra></extra>')
 
                 area_fig.update_layout(
@@ -550,6 +566,7 @@ class ConsumerVisualizer:
         )
         def update_overview_chart(n,value,value_y,n1):
             try:
+                self.option_default = value
                 activities=self.activities_queue.get()[1]
                 pg_user_tables=self.pg_stat_user_tables_queue.get()[1]
                 if (activities.shape[1]>0 and pg_user_tables.shape[1]>0) :
@@ -594,9 +611,9 @@ class ConsumerVisualizer:
                     activities.dropna(subset=['cpu', 'memory', 'read', 'write','query'], inplace=True)
                     if pg_user_tables.shape[0] ==0:
                         raise ValueError
-                    data_by_table = pg_user_tables[['table_name','schemaname', value]].copy()
-                    data_by_table = data_by_table.sort_values(by=value, ascending=False)
-                    data_by_table[value] = data_by_table[value].apply(lambda x: size_to_float(x))
+                    data_by_table = pg_user_tables[['table_name','schemaname', self.option_default]].copy()
+                    data_by_table = data_by_table.sort_values(by=self.option_default, ascending=False)
+                    data_by_table[self.option_default] = data_by_table[self.option_default].apply(lambda x: size_to_float(x))
                     if data_by_table.shape[0] ==0:
                         raise ValueError
                     activities['duration']=pd.to_numeric(activities['duration'], downcast='float')
@@ -612,12 +629,14 @@ class ConsumerVisualizer:
                     raise e
                    
                 threshold_size = 200
-                exceeding_tables = data_by_table[data_by_table[value] > threshold_size]['table_name'].tolist()
+                exceeding_tables = data_by_table[data_by_table[self.option_default] > threshold_size]['table_name'].tolist()
                 
                 pie_chart_figure = px.pie(
                     data_by_table,
-                    values=value,
+                    values=self.option_default,
                     names='table_name',
+                    width=500,  # Increased width
+                    height=200,  # Increased height
                     title="Table Overview by Size",
                     color_discrete_map={
                         table: 'red' if table in exceeding_tables else 'blue'
@@ -627,9 +646,9 @@ class ConsumerVisualizer:
                 
                 for index, table in enumerate(exceeding_tables):
                     row = data_by_table[data_by_table['table_name'] == table].iloc[0]
-                    size = row[value]
+                    size = row[self.option_default]
                     schemaname = row['schemaname']
-                    percentage = size / data_by_table[value].sum() * 100
+                    percentage = size / data_by_table[self.option_default].sum() * 100
                     annotation_x = 0.5+0.5*np.cos(index/len(exceeding_tables)*2*np.pi)
                     annotation_y =0.5+0.5*np.sin(index/len(exceeding_tables)*2*np.pi)
                     pie_chart_figure.add_annotation(
@@ -646,6 +665,7 @@ class ConsumerVisualizer:
                         hovertext=f"{row['table_name']} exceeds {threshold_size}MB ({percentage:.1f}%)",  # Tooltip text on hover
                         hoverlabel=dict(bgcolor="white", font_size=14, font_family="Arial")
                     )
+                self.pie_chart=pie_chart_figure
                 
                 fig_system_load = px.line(
                     data_operations,
@@ -658,6 +678,7 @@ class ConsumerVisualizer:
                     width=800,  # Increased width
                     height=500   # Increased height
                 )
+                self.system_load_line=fig_system_load
                 
                 pie_chart_figure.update_layout(autosize=True,font=dict(size=12),margin=dict(t=50, l=25, r=25, b=25))
                 fig_system_load.update_traces(textposition='top center')

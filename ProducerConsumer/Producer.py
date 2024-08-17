@@ -7,6 +7,8 @@ import asyncio
 import logging
 import csv
 import random
+from sshtunnel import SSHTunnelForwarder
+import paramiko
 import json
 import os
 import psycopg2
@@ -27,16 +29,22 @@ logger = logging.getLogger(__name__)
 class QueryTracker:
     _instance = None
     _connection_pool = None
+    _ssh_tunnel = None
     dbname = "bench"
     user = "postgres"
     password = "123"
     db_params = {
-                'database': dbname,
-                'user': user,
-                'password': password,
-                'host': 'localhost',
-                'port': '5432'
-            }
+        'database': dbname,
+        'user': user,
+        'password': password,
+        'host': 'localhost',  # Connect through local port after tunneling
+        'port': '5432'        # Local port after forwarding
+    }
+    # SSH and database credentials
+    #ssh_host = "192.168.1.1"
+    #ssh_port = 22
+    #ssh_username = 'user'
+    #ssh_key_file = '/path/to/private/key'
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super(QueryTracker, cls).__new__(cls)
@@ -78,6 +86,15 @@ class QueryTracker:
     async def establish_connection(cls):
         if not cls._connection_pool:
            try:
+              # cls.ssh_tunnel = SSHTunnelForwarder(
+              #   (cls.ssh_host, cls.ssh_port),
+              #   ssh_username=cls.ssh_username,
+              #   ssh_pkey=cls.ssh_key_file,
+              #   remote_bind_address=('localhost', 5432),
+              #   local_bind_address=('127.0.0.1', 5433)
+              # )
+              
+              #cls._ssh_tunnel.start()
               cls._connection_pool = await asyncpg.create_pool(
                     **cls.db_params,
                     max_size=100,
@@ -244,5 +261,4 @@ def Producer_Data_Monitoring(event_stop, temp_filename):
         if observer.is_alive():
             observer.stop()
             observer.join()
-
 

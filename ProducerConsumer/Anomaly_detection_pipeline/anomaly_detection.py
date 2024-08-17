@@ -2,8 +2,10 @@ import pandas as pd
 from tensorflow.keras.layers import Layer, LSTM, Dense, Input, Flatten, Attention,Reshape # type: ignore
 from tensorflow.keras.models import Model # type: ignore
 import tensorflow as tf # type: ignore
+from tensorflow.keras.optimizers import Nadam # type: ignore
 import keras
 from keras.saving import register_keras_serializable  # type: ignore
+import time
 import tensorflow.keras.backend as K # type: ignore
 from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer # type: ignore
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -19,6 +21,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import VotingClassifier
+import collections
 import os.path
 import warnings
 warnings.filterwarnings('ignore')
@@ -43,9 +46,8 @@ logging.basicConfig(level=logging.INFO)
 @register_keras_serializable()
 
 class attention(tf.keras.layers.Layer):
-    def __init__(self ,selected_features,**kwargs):
+    def __init__(self ,**kwargs):
         super(Attention, self).__init__(**kwargs)
-        self.selected_features=selected_features
     def build(self, input_shape):
         feature_dim=input_shape[1][-1]
         self.attention_weights = self.add_weight(
@@ -55,10 +57,11 @@ class attention(tf.keras.layers.Layer):
             name='attention_weights'
         ) 
         super(attention,self).build(input_shape)
-    def call(self, inputs):
-        if self.selected_features:
+    def call(self, inputs, selected_features=None):
+        if selected_features is not None:
             attention_scores = tf.reduce_sum(
-                inputs[:, self.selected_features] * self.attention_weights[self.selected_features], axis=-1
+                tf.gather(inputs, selected_features, axis=-1) * 
+                tf.gather(self.attention_weights, selected_features), axis=-1
             )
         else:
             attention_scores = tf.reduce_sum(inputs * self.attention_weights, axis=-1)
@@ -98,7 +101,7 @@ class AnomalyDetectionPipeline :
         self.tf_idf_feature_names =[]
         self.label_encoders = {}
         self.isolation_forest = None
-        self.scaler=StandardScaler()
+        self.scaler=None
         self.isolation_forest = None
         self.svm = None
         self.path = path
@@ -123,6 +126,8 @@ class AnomalyDetectionPipeline :
                 """True if tweet has positive compound sentiment, False otherwise."""
                 return self.sia.polarity_scores(tweet)["compound"] > 0
         try:
+            
+            
             if "datetimeutc" in x.columns :
                 x['avg_io_wait_time'] = x.groupby('datetimeutc')['io_wait'].transform(lambda x: (x == 'Y').sum())  # Count of wait times
                 x['datetimeutc'] = pd.to_datetime(x['datetimeutc'])
@@ -138,6 +143,8 @@ class AnomalyDetectionPipeline :
 
                 x.drop('datetimeutc', axis=1, inplace=True)
                 x.drop('user', axis=1, inplace=True)
+                x.drop('state', axis=1, inplace=True)
+                x.drop('pid', axis=1, inplace=True)
                 # Create Performance Anomalies Features
             if "query" in x.columns:
                 x['query'] = x['query'].astype(str)
@@ -148,6 +155,7 @@ class AnomalyDetectionPipeline :
                 x['is_positive'] = x['query'].apply(is_positive).astype(int)
             current_cpu=x['cpu']
             current_memory=x['memory']
+
             ################################
             x['avg_query_duration'] = x.groupby('query')['duration'].transform('mean')
             x['max_query_duration'] = x.groupby('query')['duration'].transform('max')
@@ -252,10 +260,16 @@ class AnomalyDetectionPipeline :
     def encode_column(self, x: pd.DataFrame, col: str) -> pd.DataFrame:
         if 'label_encoders' in self.all_models:
             self.label_encoders = self.all_models['label_encoders']
-
+        unique_values = []
         if isinstance(x[col], pd.DataFrame):
-            x[col] = x[col].stack().reset_index(drop=True)
-        unique_values = x[col].unique()
+            
+            z=x[col].T.drop_duplicates().T
+            x.drop(col, axis=1, inplace=True)
+            x[col] = z
+            print(x[col]) 
+            unique_values = x[col].iloc[:, 0].unique()
+        else:
+            unique_values = x[col].unique()
         if len(unique_values) == 1:
             x[col] = 0
         else:
@@ -304,8 +318,7 @@ class AnomalyDetectionPipeline :
                 anomalies.append('High Memory to Duration Ratio')
             if row['is_long_query'] == 1:
                 anomalies.append('Long Running Query')
-            if row['state'] == 'active' and row['duration'] > 0.1:
-                anomalies.append('Stuck in Active State')
+            
             if row['wait'] == 'Y' and row['is_long_query'] == 1:
                 anomalies.append('Potential Deadlock')
             if row['is_high_cpu'] and row['is_high_memory']:
@@ -326,12 +339,7 @@ class AnomalyDetectionPipeline :
 
             
         x['type_anomalie'] = x.apply(assign_anomalie, axis=1)
-        x['type_anomalie_pos']=x['type_anomalie'].apply(lambda x: self.analyze_sentiment(x)['pos'] )
-        x['type_anomalie_neg']=x['type_anomalie'].apply(lambda x: self.analyze_sentiment(x)['neg'] )
-        x['type_anomalie_neu']=x['type_anomalie'].apply(lambda x: self.analyze_sentiment(x)['neu'] )
-        x['type_anomalie_compound']=x['type_anomalie'].apply(lambda x: self.analyze_sentiment(x)['compound'] )
-        x['type_anomalie_is_pos']=x['type_anomalie'].apply(lambda x: self.analyze_sentiment(x)['compound']>0 )
-
+        
 
         
     def transform_for_model(self, x: pd.DataFrame) -> pd.DataFrame:
@@ -357,16 +365,25 @@ class AnomalyDetectionPipeline :
     def prepare_data_for_prediction(self, x: pd.DataFrame) -> pd.DataFrame:
         x = self.transform_for_model(x)
         self.scaler=self.all_models['scaler']
-        expected_features = self.scaler.feature_names_in_
+        expected_features = list(self.scaler.feature_names_in_)
+        # Check for duplicates in expected_features
+        duplicates_in_expected = [item for item, count in collections.Counter(expected_features).items() if count > 1]
+        if duplicates_in_expected:
+            print(f"Warning: Duplicate columns in expected_features: {duplicates_in_expected}")
+            
+        duplicates_in_x=[item for item,count in collections.Counter(x.columns.to_list()).items() if count > 1]
+        if duplicates_in_x:
+            print(f"Warning: Duplicate columns in x: {duplicates_in_x}")
+            x = x.loc[:, ~x.columns.duplicated()]
         for feature in expected_features:
             if feature not in x.columns:
                x[feature] = 0
-        x_train = self.scaler.transform(x[expected_features])
+        new_x=x[expected_features]
+        x_train = self.scaler.transform(new_x)
         x_tensor = tf.convert_to_tensor(x_train, dtype=tf.float32)
         self.autoencoder=self.all_models['autoencoder']
         
         reconstruction = self.autoencoder.predict(x)
-        print(reconstruction)
         mse = tf.reduce_mean(tf.square(x_tensor - reconstruction), axis=1)
         autoencoder_scores = mse.numpy()
         self.isolation_forest=self.all_models['isolation_forest']
@@ -393,26 +410,22 @@ class AnomalyDetectionPipeline :
         return final_data
     def detect_anomalies(self, x):
         x = self.transform_for_model(x)# we use the same function to transform the data
-        x = x.fillna(method='bfill')  # Backward fill
+        x = x.fillna(method='bfill')
+        self.scaler = StandardScaler()
         x_train = self.scaler.fit_transform(x) # when prediction we need to use the same scaler
-            # Convert to tensor
         x_tensor = tf.convert_to_tensor(x_train, dtype=tf.float32)
-        # Define model architecture
         input_dim = x_train.shape[1]
         encoding_dim = 64
-        
         input_layer = Input(shape=(input_dim,))
         flatten = Flatten()(input_layer)
-        lstm = MyLSTMLayer(20)(flatten)
+        lstm = MyLSTMLayer(50)(flatten)
         encoder = Dense(encoding_dim, activation='relu')(lstm)
-        features_tfidf=self.tf_idf.feature_names_in_
         
-        attention_layer = Attention(selected_features=list(features_tfidf))([encoder,encoder])
+        attention_layer = Attention()([encoder,encoder])
         decoder = Dense(input_dim, activation='sigmoid')(attention_layer)
         decoder = Reshape((input_dim,))(decoder)
-        
         self.autoencoder = Model(inputs=input_layer, outputs=decoder)
-        self.autoencoder.compile(optimizer='adam', loss='mse')
+        self.autoencoder.compile(optimizer=Nadam(learning_rate=0.001), loss='mse')
         early_stopping = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=3, restore_best_weights=True)
         self.autoencoder.fit(x_tensor, x_tensor, epochs=100, batch_size=32, callbacks=[early_stopping]) #  we load this model in prediction face
         reconstruction = self.autoencoder.predict(x)
@@ -520,7 +533,7 @@ class AnomalyDetectionPipeline :
         except Exception as e:
             logging.error(f"Error occurred while training the classification model: {str(e)}")
     # HERE WHEN DO THE PREDECTION we need to give him the inti row 
-    def final_predection(self, x: pd.DataFrame) -> pd.DataFrame:
+    def final_prediction(self, x: pd.DataFrame) -> pd.DataFrame:
         try:
             self.decision_tree_classifier=self.all_models['treeClassifier']
             features_tree = self.decision_tree_classifier.feature_names_in_
@@ -532,8 +545,8 @@ class AnomalyDetectionPipeline :
             y_pred = self.decision_tree_classifier.predict(x[features_tree])
             y_pred_labels = [category_list[i] for i in y_pred]
             predictions_df = pd.DataFrame({'predicted_label': y_pred_labels})
-            logging.info(predictions_df['predicted_label'])
-            return pd.concat([x.reset_index(drop=True), predictions_df], axis=1)
+            K.clear_session()
+            return predictions_df
         except Exception as e:
             logging.error(f"Error occurred while transforming data: {str(e)}")
     def evaluate_model(self, x: pd.DataFrame, y_true: pd.Series) -> None:
@@ -559,38 +572,19 @@ class AnomalyDetectionPipeline :
         os.makedirs(os.path.dirname(self.path), exist_ok=True)
         with open(self.path, 'wb') as f:
             joblib.dump(data, f)
+            f.close()
     def load(self):
         if (os.path.exists(self.path)):
-             return keras.models.load_model(
-                 self.path,
-                 custom_objects={
-                     'tf': tf,
-                     "attention":attention,
-                     "MyLSTMLayer": MyLSTMLayer
-                 }
-             )
+            models=joblib.load(self.path)
+            return models
         else :
             return {}
         
 if __name__ == "__main__":
     activities=pd.read_csv('ProducerConsumer/Pg_activity_Data/activities.csv',sep=';')
     anomaly_detection_pipeline = AnomalyDetectionPipeline(columns=activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor.h5')
-    train_data=anomaly_detection_pipeline.train_classifier(activities.iloc[0:1000])
-    one_row = activities.iloc[0:1]
-    logging.info(one_row)
-    final=anomaly_detection_pipeline.final_predection(one_row.copy())
-    logging.info(final)
-    logging.info(f' anomalie predicted before class:: {final['anomaly_scores'][0]}')
-    if (final['anomaly_scores'].values[0]==1):
-        logging.info(f' anomalie predicted after class:: {final["predicted_label"]}')
-    if (final['anomaly_scores'].values[0]==0 and final['predicted_label'].values[0]!='Normal'):
-         while(final['anomaly_scores'][0]==0 and final['predicted_label'][0]!='Normal'):
-            final_train=anomaly_detection_pipeline.train_classifier(activities.iloc[0:1000])
-            final=anomaly_detection_pipeline.final_predection(one_row)
-            logging.info(f' anomalie predicted before class:: {final["anomaly_scores"].values}')
-            if (final['anomaly_scores'].values[0]==1):
-                logging.info(f' anomalie predicted after class:: {final["predicted_label"]}')
-            if (final['anomaly_scores'].values[0]==0 and final['predicted_label'].values[0]=='Normal'):
-                break
-        
-        
+    train_data=anomaly_detection_pipeline.train_classifier(activities.iloc[0:10000])
+    time_now=time.time()
+    predict=anomaly_detection_pipeline.final_prediction(activities.iloc[0:10000])
+    print(f"Time taken: {time.time() - time_now:.2f} seconds")
+    print(predict)

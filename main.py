@@ -2,6 +2,8 @@ from ProducerConsumer.ActivityWatcher.Transaction import DBStressMonitor
 from ProducerConsumer.Producer_Consumer import ExecuteProducerConsumer
 from ProducerConsumer.Notify import NotificationOn
 from ProducerConsumer.Producer import run_performance_test
+import os
+os.environ['PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT'] = '10'  
 import multiprocessing 
 import ray 
 def runDBStressMonitor():
