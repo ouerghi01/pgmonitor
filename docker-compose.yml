@@ -1,4 +1,4 @@
-version: "2.1"
+version: "3.8"  # Updated version for better feature support
 
 services:
   zookeeper:
@@ -9,6 +9,8 @@ services:
       - "zookeeper_data:/bitnami"
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - app_network
 
   kafka:
     image: docker.io/bitnami/kafka:2.8
@@ -25,11 +27,49 @@ services:
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
     depends_on:
       - zookeeper
-    security_opt:
-      - no-new-privileges:false
+    networks:
+      - app_network
+
+  postgresql_db:
+    image: docker.io/bitnami/postgresql:16
+    environment:
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - "postgresql_data:/bitnami"
+      - "./ProducerConsumer:/scripts"  # Mount script directory
+    networks:
+      - app_network
+
+  python_app:
+    build:
+      context: .  # Define build context
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+      - postgresql_db
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9093
+      - KAFKA_TOPIC=events
+      - POSTGRESQL_HOST=postgresql_db
+      - POSTGRESQL_PORT=5432
+      - POSTGRESQL_USER=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DB=postgres
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge  # Use bridge network to enable communication between services
 
 volumes:
   zookeeper_data:
     driver: local
   kafka_data:
+    driver: local
+  postgresql_data:
     driver: local

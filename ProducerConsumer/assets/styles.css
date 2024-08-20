@@ -1,0 +1,129 @@
+
+/* General Body Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4; /* Light background for the entire app */
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for the entire layout */
+.dash-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Heading Styling */
+h1 {
+    text-align: center;
+    color: #212529;
+    font-size: 2.5rem;
+    margin: 20px 0;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Category Title Styling */
+h4 {
+    text-align: center;
+    color: #007bff; /* Blue color for the title */
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+/* Graph Containers */
+.graph-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Dropdown Styling */
+.dcc-dropdown {
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dash-container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .graph-container {
+        padding: 15px;
+    }
+}
+
+.sidebar{
+    width: 20%;
+    height: 100%;
+    background-color: #f4f4f4;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#overview-link {
+    background-color: #f4f4f4;
+    color: #333;
+}
+.sidebar-nav .nav-link {
+    color: #ddd; /* Light text color */
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease; /* Smooth hover effect */
+}
+.sidebar-nav .nav-link:hover {
+    background-color: #333; /* Darker background on hover */
+    color: #fff; /* Light text color on hover */
+}
+.sidebar-nav .nav-link.active {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: #fff;
+}
+.sidebar-nav .nav-link.active:hover {
+    background-color: #0056b3; /* Darker blue when active and hovered */
+}
+#pie_chart {
+    width: 500px;
+    height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    height: 300px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    overflow: auto;
+    position: relative;
+    background-color: #f9f9f9;
+    left: 0px;
+
+    
+
+    
+}

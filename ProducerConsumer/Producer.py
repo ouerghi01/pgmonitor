@@ -30,14 +30,14 @@ class QueryTracker:
     _instance = None
     _connection_pool = None
     _ssh_tunnel = None
-    dbname = "bench"
+    dbname = "postgres"
     user = "postgres"
-    password = "123"
+    password = "postgres"
     db_params = {
         'database': dbname,
         'user': user,
         'password': password,
-        'host': 'localhost',  # Connect through local port after tunneling
+        'host': 'postgresql_db',  # Connect through local port after tunneling
         'port': '5432'        # Local port after forwarding
     }
     # SSH and database credentials
@@ -56,30 +56,35 @@ class QueryTracker:
             self.thread_pool = ThreadPoolExecutor(max_workers=10)
             self.initialized = False
             self.event_stop = event_stop
-            self.queries=[
+            self.queries = [
                 ('pg_stat_activity', 'SELECT * FROM pg_stat_activity;'),
-                ('pg_stat_user_tables','''
-    SELECT
-        s.schemaname,
-        s.relname AS table_name,
-        pg_size_pretty(pg_total_relation_size(s.relid)) AS total_size,
-        pg_size_pretty(pg_relation_size(s.relid)) AS table_size,
-        pg_size_pretty(pg_total_relation_size(s.relid) - pg_relation_size(s.relid)) AS indexes_size,
-        s.seq_scan AS sequential_scans,
-        s.idx_scan AS index_scans
-    FROM
-        pg_stat_user_tables s
-    ORDER BY
-        pg_total_relation_size(s.relid) DESC;
-
-    ''')
+                ('pg_stat_context_io', """
+                    SELECT context, SUM(reads) AS total_reads, SUM(writes) AS total_writes,
+                    SUM(writebacks) AS total_writebacks
+                    FROM pg_stat_io
+                    GROUP BY context
+                """),
+                ('pg_stat_io_activity', """
+                    SELECT backend_type, SUM(reads + writes + writebacks) AS total_io_operations
+                    FROM pg_stat_io
+                    GROUP BY backend_type
+                """),
+                ('pg_stat_user_tables', '''
+                    SELECT s.schemaname, s.relname AS table_name, pg_size_pretty(pg_total_relation_size(s.relid)) AS total_size,
+                    pg_size_pretty(pg_relation_size(s.relid)) AS table_size,
+                    pg_size_pretty(pg_total_relation_size(s.relid) - pg_relation_size(s.relid)) AS indexes_size,
+                    s.seq_scan AS sequential_scans, s.idx_scan AS index_scans
+                    FROM pg_stat_user_tables s
+                    ORDER BY pg_total_relation_size(s.relid) DESC;
+                ''')
             ]
     async def setup(self):
         if not self.initialized:
             self.ai_producer = AIOKafkaProducer(
-                bootstrap_servers='localhost:9092',
-                value_serializer=lambda v: json.dumps(v, default=str).encode('utf-8'),enable_idempotence=True
-            )
+            bootstrap_servers='kafka:9093',  # Use the Kafka service name and port exposed to other services
+            value_serializer=lambda v: json.dumps(v, default=str).encode('utf-8'),
+            enable_idempotence=True
+           )
             await self.ai_producer.start()
             self.initialized = True
     @classmethod
@@ -150,6 +155,7 @@ class QueryTracker:
                 logger.error("Error occurred during query execution: %s", str(result))
         
 def run_performance_test():
+    #sudo -u postgres pg_activity --output $tempfile -U postgres
     bash_script_path = 'ProducerConsumer/pg_activity.sh'
     if not os.path.exists(bash_script_path):
         raise FileNotFoundError(f"The file {bash_script_path} does not exist.")
@@ -163,7 +169,10 @@ def run_performance_test():
         print(e.stderr)
         exit(1)
     try:
-        result = subprocess.Popen([bash_script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.Popen([
+            "docker", "exec", "-it", "postgresql_db", bash_script_path
+        ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        
         stdout, stderr = result.communicate()
         if result.returncode != 0:
             print(f"Error running the script: {stderr}")
@@ -179,7 +188,7 @@ class Handler(PatternMatchingEventHandler):
     def __init__(self, event_stop):
         PatternMatchingEventHandler.__init__(self, patterns=['*.csv'], ignore_directories=True, case_sensitive=False)
         self.producer=KafkaProducer(
-            bootstrap_servers='localhost:9092',
+            bootstrap_servers='kafka:9092',
             value_serializer=lambda v: json.dumps(v).encode('utf-8')
         )
         self.event_stop = event_stop

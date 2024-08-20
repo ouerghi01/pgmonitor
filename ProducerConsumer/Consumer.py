@@ -34,10 +34,16 @@ class ConsumerVisualizer:
     def __init__(self,_event_stop):
        
         self.thread_pool = ThreadPoolExecutor(max_workers=10)
+        self.pg_stat_context_io_queue = Queue()
+        self.pg_stat_context_io=pd.DataFrame()
+        self.io_operations_context_bar_chart={}
+        self.pg_stat_io_activity_queue = Queue()
         self.pie_chart={}
+        self.pg_stat_io_activity=pd.DataFrame()
         self.option_default = 'total_size'
+        self.parallel_coordinates = {}
         self.system_load_line={}
-        self.consumer =KafkaConsumer("db-monitoring", bootstrap_servers='localhost:9092',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+        self.consumer =KafkaConsumer("db-monitoring", bootstrap_servers='kafka:9093',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
         self.ai_consumer = None
         self.activities = pd.DataFrame(columns=['datetimeutc', 'pid', 'database', 'appname', 'user', 'client', 'cpu', 'memory', 'read', 'write', 'duration', 'wait', 'io_wait', 'state', 'query'])
         self.pg_stat_activity = pd.DataFrame(columns=['datid', 'datname', 'pid', 'usesysid', 'usename', 'application_name', 'client_addr', 'client_hostname', 'client_port', 'backend_start', 'xact_start', 'query_start', 'state_change', 'wait_event_type', 'wait_event', 'state', 'backend_xid', 'backend_xmin', 'query', 'info'])
@@ -60,8 +66,10 @@ class ConsumerVisualizer:
             ],
             vertical=True,
             pills=True,
+            className='sidebar-nav'
         )
         ],
+        className="sidebar",
         style={"position": "fixed", "left": 0, "top": 0, "bottom": 0, "width": "250px", "padding": "2rem 1rem", "background-color": "#333"}
          )
         self.app.layout = dbc.Container([
@@ -74,7 +82,7 @@ class ConsumerVisualizer:
             ]),
             dcc.Interval(id='interval', interval=10*1000, n_intervals=0)  # Correct placement
         ])
-
+        self.io_operations_bar_chart = {}
         self.data_lock = threading.Lock()
         self.activities_queue = Queue()
         self.pg_stat_user_tables_queue = Queue()
@@ -90,7 +98,7 @@ class ConsumerVisualizer:
         if not self.initialized:
 
           try:
-             self.ai_consumer = AIOKafkaConsumer('query-monitoring', bootstrap_servers='localhost:9092',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+             self.ai_consumer = AIOKafkaConsumer('query-monitoring', bootstrap_servers='kafka:9092',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
              await self.ai_consumer.start()
           except Exception  as e:
               logger.exception("Error async consuming %s", e)
@@ -130,21 +138,35 @@ class ConsumerVisualizer:
         type_query=data['type_query']
         
         record=data['data']
-        func_dict={ "pg_stat_user_tables":self.process_data_pg_stat_user_tables,"pg_stat_activity":self.process_data_stat_activity}
+        func_dict={ "pg_stat_user_tables":self.process_data_pg_stat_user_tables,"pg_stat_context_io":self.process_data_pg_stat_context_io
+                   ,
+                   "pg_stat_activity":self.process_data_stat_activity,"pg_stat_io_activity":self.process_data_io_operations}
         func_dict[type_query](record)
             #print("shape of pg_stat_user_tables",self.pg_stat_user_tables.shape)
+    def process_data_pg_stat_context_io(self,record):
+        for item in record:
+            new_row = pd.DataFrame([item])
+            with self.data_lock:
+                self.pg_stat_context_io = pd.concat([self.pg_stat_context_io, new_row], ignore_index=True)
+        self.pg_stat_context_io_queue.put(('pg_stat_context_io',self.pg_stat_context_io))
     def process_data_stat_activity(self,record):
         for item in record:
             new_row = pd.DataFrame([item])
             with self.data_lock:
                 self.pg_stat_activity = pd.concat([self.pg_stat_activity, new_row], ignore_index=True)
-                self.pg_stat_activity_queue.put(('pg_stat_activity',self.pg_stat_activity))
+        self.pg_stat_activity_queue.put(('pg_stat_activity',self.pg_stat_activity))
+    def process_data_io_operations(self,record):
+        for item in record:
+            new_row = pd.DataFrame([item])
+            self.pg_stat_io_activity = pd.concat([self.pg_stat_io_activity, new_row], ignore_index=True)
+        self.pg_stat_io_activity_queue.put(('pg_stat_io_activity',self.pg_stat_io_activity))
+            
     def process_data_pg_stat_user_tables(self,record):
         for item in record:
             new_row = pd.DataFrame([item])
             with self.data_lock:
                 self.pg_stat_user_tables = pd.concat([self.pg_stat_user_tables, new_row], ignore_index=True)
-                self.pg_stat_user_tables_queue.put(('pg_stat_user_tables',self.pg_stat_user_tables))
+        self.pg_stat_user_tables_queue.put(('pg_stat_user_tables',self.pg_stat_user_tables))
     def handle_anomaly(self, message):
         data = message.value 
         row=pd.DataFrame([data])
@@ -176,7 +198,9 @@ class ConsumerVisualizer:
         self.message_count+=1           
         row_activity['predicted_label'] = prediction["predicted_label"]
         self.activities = pd.concat([self.activities, row_activity], ignore_index=True)
+        print(self.activities)
         self.activities_queue.put(('activity',self.activities))
+
                      
         #self.convert_activities()
     def retrain_models(self):
@@ -223,69 +247,91 @@ class ConsumerVisualizer:
         )
         def render_page_content(n,n1):
             if n == "/Overview":
-                
                 return dbc.Container([
-                    dbc.Row([
-                        html.H1("Postgres Table Overview",style={
-                            "textAlign": "center",           # Center the text
-                            "color": "red",                 # Dark gray color for the text
-                            "fontSize": "2.5rem",            # Responsive font size
-                            "margin": "20px 0",              # Margin above and below the heading
-                            "fontFamily": "Arial, sans-serif", # Font family for a clean look
-                            "fontWeight": "bold",            # Bold text
-                            "backgroundColor": "#f8f9fa",    # Light gray background
-                            "padding": "10px",               # Padding around the text
-                            "borderRadius": "5px",           # Rounded corners
-                            "boxShadow": "0 2px 4px rgba(0, 0, 0, 0.1)"  # Subtle shadow for depth
-                        }),
-                        dbc.Col(
-                            [
-                                html.H4(id="category_title", style={"text-align": "center", "color": "blue"}),
-                                dcc.Graph(
-                                    id="pie_chart",
-                                    figure=self.pie_chart,
-                                ),
-                                dcc.Dropdown(
-                                    id="values",
-                                    options=[{'label': 'Total Size', 'value': 'total_size'},{'label': 'Table Size', 'value': 'table_size'},{'label': 'Indexes Size', 'value': 'indexes_size'}],
-                                    value=self.option_default,
-                                    clearable=False,
-                                    
-                                ),
-                            ],
-                            width=4,
-                            
-                        )
-                    ]),
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                            [
-                                html.H4("Postgres Activities"),
-                                dcc.Graph(id='system_load_line', figure=self.system_load_line),
-                                dcc.Dropdown(
-                                    id='load_parameters_y',
-                                    options=[
-                                        {'label': 'Memory', 'value': 'memory'},
-                                        {'label': 'Write', 'value': 'write'},
-                                        {'label': 'Read', 'value': 'read'}
-                                    ],
-                                    value='memory',
-                                    clearable=False
-                                ),
-                            ],
-                            width=12,
-                            style={
-                                "padding": "1rem",
-                                "background-color": "#f8f9fa",
-                                "border-radius": "8px",
-                                "box-shadow": "0px 4px 6px rgba(0,0,0,0.1)",  # Subtle shadow for depth
-                                "margin-bottom": "1rem",  # Space below the column
-                            }
-                        )
-                        ]
-                    )
-                ])
+    # First Row: Title
+    dbc.Row([
+        html.H1("Postgres Table Overview", style={
+            "textAlign": "center",
+            "color": "#212529",
+            "fontSize": "2.5rem",
+            "margin": "20px 0",
+            "fontFamily": "Arial, sans-serif",
+            "fontWeight": "bold",
+            "backgroundColor": "#f8f9fa",
+            "padding": "15px",
+            "borderRadius": "5px",
+            "boxShadow": "0 2px 4px rgba(0, 0, 0, 0.1)"
+        }),
+    ]),
+    
+    # Second Row: Pie Chart and Anomaly Classification
+    dbc.Row([
+        dbc.Col(
+            [
+                html.H4(id="category_title", style={
+                    "text-align": "center", 
+                    "color": "#007bff", 
+                    "margin-bottom": "20px"
+                }),
+                dcc.Graph(
+                    id="pie_chart",
+                    figure=self.pie_chart,
+                    className="graph-container"  # Apply graph-container styling
+                ),
+                dcc.Dropdown(
+                    id="values",
+                    options=[
+                        {'label': 'Total Size', 'value': 'total_size'},
+                        {'label': 'Table Size', 'value': 'table_size'},
+                        {'label': 'Indexes Size', 'value': 'indexes_size'}
+                    ],
+                    value=self.option_default,
+                    clearable=False,
+                    className="dcc-dropdown"  # Apply dropdown styling
+                ),
+            ],
+            width=6,  # Set width to 6 for balance
+        ),
+        dbc.Col(
+            [
+                dcc.Graph(
+                    id='anomaly_classification',
+                    figure=self.parallel_coordinates,
+                    className="graph-container"  # Apply graph-container styling
+                )
+            ],
+            width=6,  # Set width to 6 for balance
+        )
+    ], className="dash-container"),  # Apply dash-container styling
+    
+    # Third Row: System Load Line Chart
+    dbc.Row([
+        dbc.Col(
+            [
+                dcc.Graph(
+                    id='system_load_line',
+                    figure=self.system_load_line,
+                    className="graph-container"  # Apply graph-container styling
+                ),
+                dcc.Dropdown(
+                    id='load_parameters_y',
+                    options=[
+                        {'label': 'CPU', 'value': 'cpu'},
+                        {'label': 'Memory', 'value': 'memory'},
+                        {'label': 'Read', 'value': 'read'},
+                        {'label': 'Write', 'value': 'write'}
+                    ],
+                    value='cpu',
+                    className="dcc-dropdown",  # Apply dropdown styling
+                    style={"margin-top": "10px"}  # Add margin-top for spacing
+                )
+            ],
+            width=12,  # Full width for the system load graph
+        )
+    ], className="dash-container"),
+    
+], fluid=True)
+
             elif n == "/Query_Performance":
                 activities=self.activities_queue.get()[1]
                 activities['duration']=pd.to_numeric(activities['duration'],downcast='float')
@@ -428,7 +474,46 @@ class ConsumerVisualizer:
                     
                 ], fluid=True)
             elif n == "/IO_Statistics":
-                return html.P("This is the content of the I/O statistics page!")
+                return dbc.Container(
+                    [
+                        html.H1(
+                            "IO Statistics Statistics PostgreSQL",
+                            style={
+                                "textAlign": "center",           # Center the text
+                                "color": "#333",                 # Dark gray color for the text
+                                "fontSize": "2.5rem",            # Responsive font size
+                                "margin": "20px 0",              # Margin above and below the heading
+                                "fontFamily": "Arial, sans-serif", # Font family for a clean look
+                                "fontWeight": "bold",            # Bold text
+                                "backgroundColor": "#f8f9fa",    # Light gray background
+                                "padding": "10px",               # Padding around the text
+                            }),
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    [
+                                        dcc.Graph(
+                                            id='io-operations-bar-chart',
+                                            figure=self.io_operations_bar_chart
+                                        )
+                                    ],
+                                    width=6
+                                ),
+                                dbc.Col(
+                                    [
+                                        dcc.Graph(
+                                            id='io-operations-context-bar-chart',
+                                            figure=self.io_operations_context_bar_chart
+                                        )
+                                    ],
+                                    width=6
+                                ),
+                                
+                            ]
+                        )
+                    ]
+                )
+
             elif n == "/Transaction_Stats":
                 return html.P("This is the content of the transaction stats page!")
             elif n == "/Buffer_and_Cache":
@@ -499,6 +584,34 @@ class ConsumerVisualizer:
                                 hovermode='closest'
                                 )
                 return fig_top_10_queries, fig_query_execution_time_distribution
+        @self.app.callback(
+            Output("io-operations-bar-chart", "figure"),
+            Output("io-operations-context-bar-chart", "figure"),
+            [Input("url", "pathname"),Input('interval', 'n_intervals')],
+        )
+        def update_io_operations_bar_chart(n,n1):
+            if n == "/IO_Statistics":
+                try:
+
+                   pg_stat_io=self.pg_stat_io_activity_queue.get()[1]
+                   pg_stat_io_context=self.pg_stat_context_io_queue.get()[1]
+                   df_melted = pd.melt(pg_stat_io_context, id_vars=['context'], 
+                    value_vars=['total_reads', 'total_writes', 'total_writebacks'],
+                    var_name='operation', value_name='total_operations')
+                   pg_stat_io.dropna()
+                   pg_stat_io_context.dropna()
+                   fig_io_operations_bar_chart = px.bar(pg_stat_io, x='backend_type', y='total_io_operations', title='I/O Operations')
+                   fig_io_operations_context_bar_chart = px.bar(df_melted, x='context', y='total_operations', color='operation', 
+                             title="Distribution of I/O Operations by Context",
+                             labels={'context': 'I/O Context', 'total_operations': 'Total I/O Operations'},
+                             barmode='group')
+                   self.io_operations_context_bar_chart=fig_io_operations_context_bar_chart
+                   self.io_operations_bar_chart=fig_io_operations_bar_chart
+                   return fig_io_operations_bar_chart
+                except Exception as e:
+                   logger.error(f"Error in updating IO Operations Bar Chart: {e}")
+                   return {}
+            
             return {}
         @self.app.callback(
             Output("activities_table", "data"),
@@ -620,7 +733,7 @@ class ConsumerVisualizer:
                     activities['query']=activities['query'].apply(lambda x:str(x)[0:10])
                     activities['info']='Duration: '+activities['duration'].astype(str)+'s, Wait: '+activities['wait'].astype(str)+'s'
                     try:
-                        data_operations = activities.groupby(['query','info'],as_index=False).agg({'cpu': 'mean', 'memory': 'mean', 'write': 'mean', 'read': 'mean'}).reset_index().head(10)
+                        data_operations = activities.groupby(['query','info','predicted_label'],as_index=False).agg({'cpu': 'mean', 'memory': 'mean', 'write': 'mean', 'read': 'mean'}).reset_index().head(10)
                     except Exception as e:
                         print(e)
                         raise e
@@ -636,7 +749,7 @@ class ConsumerVisualizer:
                     values=self.option_default,
                     names='table_name',
                     width=500,  # Increased width
-                    height=200,  # Increased height
+                    height=300,  # Increased height
                     title="Table Overview by Size",
                     color_discrete_map={
                         table: 'red' if table in exceeding_tables else 'blue'
@@ -647,7 +760,6 @@ class ConsumerVisualizer:
                 for index, table in enumerate(exceeding_tables):
                     row = data_by_table[data_by_table['table_name'] == table].iloc[0]
                     size = row[self.option_default]
-                    schemaname = row['schemaname']
                     percentage = size / data_by_table[self.option_default].sum() * 100
                     annotation_x = 0.5+0.5*np.cos(index/len(exceeding_tables)*2*np.pi)
                     annotation_y =0.5+0.5*np.sin(index/len(exceeding_tables)*2*np.pi)
@@ -665,6 +777,35 @@ class ConsumerVisualizer:
                         hovertext=f"{row['table_name']} exceeds {threshold_size}MB ({percentage:.1f}%)",  # Tooltip text on hover
                         hoverlabel=dict(bgcolor="white", font_size=14, font_family="Arial")
                     )
+                # Get a list of unique labels
+                unique_labels = data_operations['predicted_label'].unique()
+                # Create a color map for the labels
+                # Generate a color for each unique label using a colormap
+                colors = plt.cm.get_cmap('tab20', len(unique_labels)).colors
+                # Create a dictionary mapping each label to a color
+                label_color_mapping = {label: f"rgb{tuple(map(int, tuple(c * 255 for c in colors[idx])))}" for idx, label in enumerate(unique_labels)}
+                # Apply the color mapping
+                data_operations['label_color'] = data_operations['predicted_label'].map(label_color_mapping)
+
+                parallel_coordinates = px.parallel_coordinates(
+                data_operations,
+                dimensions=['cpu', 'memory', 'read', 'write'],
+                color='label_color',
+                labels={'cpu': 'CPU', 'memory': 'Memory', 'read': 'Read', 'write': 'Write'},
+                color_continuous_scale=px.colors.diverging.Tealrose_r,  # Custom color scale for better visualization
+                title="Parallel Coordinates Plot of Metrics with Anomaly Detection"
+                )
+            
+            # Update the traces to add hover information
+                for label in unique_labels:
+                    trace_indices = data_operations[data_operations['predicted_label'] == label].index
+                    hover_text = data_operations.loc[trace_indices, 'query'].tolist()
+                    parallel_coordinates.update_traces(
+                        selector={'line': {'color': label_color_mapping[label]}},
+                        hoverinfo='text',
+                        hovertext=hover_text
+                    )
+                self.parallel_coordinates=parallel_coordinates
                 self.pie_chart=pie_chart_figure
                 
                 fig_system_load = px.line(
@@ -672,24 +813,26 @@ class ConsumerVisualizer:
                     x='cpu',
                     y=value_y,
                     color='query',
-                    text='info',  # Hover to show details
+                    hover_data={'info':True},  # Hover to show details
                     title='Operations Load',
                     markers=True,
-                    width=800,  # Increased width
-                    height=500   # Increased height
+                    width=800,  
+                    height=500   
                 )
                 self.system_load_line=fig_system_load
                 
-                pie_chart_figure.update_layout(autosize=True,font=dict(size=12),margin=dict(t=50, l=25, r=25, b=25))
+                pie_chart_figure.update_layout(autosize=True, width=500,height=300, font=dict(size=12),margin=dict(t=50, l=25, r=25, b=25))
                 fig_system_load.update_traces(textposition='top center')
                 fig_system_load.update_layout(hovermode='closest')
 
-                return pie_chart_figure, f"Table  by {value}",fig_system_load
+                return pie_chart_figure, f"Table  by {value}",fig_system_load,
             
             except Exception as e:
                 print(e)
                 raise e
-        self.app.run_server(debug=False)
+        with self.data_lock :
+
+            self.app.run_server(debug=False)
          
     def Consumer_Data_Monitoring(self):
         asyncio.run(self.async_tasks())
