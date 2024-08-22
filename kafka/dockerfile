@@ -1,0 +1,10 @@
+# Use the official Bitnami Kafka image as the base image
+FROM bitnami/kafka:2.8
+
+# Copy the topic creation script into a directory where we have permissions
+COPY create-topics.sh /usr/local/bin/
+
+
+
+# Use an entrypoint script to run the topic creation script and then start Kafka
+ENTRYPOINT ["/usr/local/bin/create-topics.sh"]

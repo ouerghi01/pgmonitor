@@ -13,7 +13,9 @@ services:
       - app_network
 
   kafka:
-    image: docker.io/bitnami/kafka:2.8
+    build:
+      context: ./kafka
+      dockerfile: Dockerfile
     ports:
       - "9092:9092"
     volumes:

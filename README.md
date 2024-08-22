@@ -4,7 +4,7 @@ Welcome to the **Postgres Monitoring** repository!
 
 This project is designed to monitor PostgreSQL databases using a hybrid deep learning model that integrates autoencoders and classification models. It features a real-time dashboard to visualize and analyze high-volume data efficiently.
 
-## Features
+## Featuresq
 
 - **PostgreSQL Monitoring**: Track and analyze database performance and activity.
 - **Hybrid Deep Learning Model**: Utilize autoencoders and classification models for advanced data analysis.
