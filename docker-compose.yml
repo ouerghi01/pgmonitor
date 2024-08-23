@@ -1,4 +1,4 @@
-version: "3.8"  # Updated version for better feature support
+version: "3.8"
 
 services:
   zookeeper:
@@ -42,13 +42,13 @@ services:
       - "5432:5432"
     volumes:
       - "postgresql_data:/bitnami"
-      - "./ProducerConsumer:/scripts"  # Mount script directory
+      - "./ProducerConsumer:/scripts"
     networks:
       - app_network
 
   python_app:
     build:
-      context: .  # Define build context
+      context: .
       dockerfile: Dockerfile
     depends_on:
       - kafka
@@ -66,7 +66,7 @@ services:
 
 networks:
   app_network:
-    driver: bridge  # Use bridge network to enable communication between services
+    driver: bridge
 
 volumes:
   zookeeper_data:

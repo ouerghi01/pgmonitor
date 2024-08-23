@@ -8,10 +8,8 @@ import logging
 import csv
 import random
 from sshtunnel import SSHTunnelForwarder
-import paramiko
 import json
 import os
-import psycopg2
 from concurrent.futures import ThreadPoolExecutor
 from aiokafka import AIOKafkaProducer
 import time
@@ -21,7 +19,6 @@ from watchdog.events import FileSystemEvent, PatternMatchingEventHandler
 import  watchdog
 import getpass
 import subprocess
-import threading as thread
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -188,7 +185,7 @@ class Handler(PatternMatchingEventHandler):
     def __init__(self, event_stop):
         PatternMatchingEventHandler.__init__(self, patterns=['*.csv'], ignore_directories=True, case_sensitive=False)
         self.producer=KafkaProducer(
-            bootstrap_servers='kafka:9092',
+            bootstrap_servers='kafka:9093',
             value_serializer=lambda v: json.dumps(v).encode('utf-8')
         )
         self.event_stop = event_stop
