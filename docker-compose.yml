@@ -13,9 +13,7 @@ services:
       - app_network
 
   kafka:
-    build:
-      context: ./kafka
-      dockerfile: Dockerfile
+    image: docker.io/bitnami/kafka:3.8
     ports:
       - "9092:9092"
     volumes:
@@ -27,10 +25,12 @@ services:
       - KAFKA_CFG_LISTENERS=CLIENT://:9093,EXTERNAL://:9092
       - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9093,EXTERNAL://localhost:9092
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
+      - KAFKA_CREATE_TOPICS="db-monitoring:1:1,query-monitoring:1:1"
     depends_on:
       - zookeeper
     networks:
       - app_network
+
 
   postgresql_db:
     image: docker.io/bitnami/postgresql:16

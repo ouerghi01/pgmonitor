@@ -78,7 +78,7 @@ class QueryTracker:
     async def setup(self):
         if not self.initialized:
             self.ai_producer = AIOKafkaProducer(
-            bootstrap_servers='kafka:9093',  # Use the Kafka service name and port exposed to other services
+            bootstrap_servers='kafka:9092',  # Use the Kafka service name and port exposed to other services
             value_serializer=lambda v: json.dumps(v, default=str).encode('utf-8'),
             enable_idempotence=True
            )
@@ -185,7 +185,7 @@ class Handler(PatternMatchingEventHandler):
     def __init__(self, event_stop):
         PatternMatchingEventHandler.__init__(self, patterns=['*.csv'], ignore_directories=True, case_sensitive=False)
         self.producer=KafkaProducer(
-            bootstrap_servers='kafka:9093',
+            bootstrap_servers='kafka:9092',
             value_serializer=lambda v: json.dumps(v).encode('utf-8')
         )
         self.event_stop = event_stop

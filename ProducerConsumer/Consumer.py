@@ -43,7 +43,12 @@ class ConsumerVisualizer:
         self.option_default = 'total_size'
         self.parallel_coordinates = {}
         self.system_load_line={}
-        self.consumer =KafkaConsumer("db-monitoring", bootstrap_servers='kafka:9093',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+        try:
+
+           self.consumer =KafkaConsumer("db-monitoring", bootstrap_servers='kafka:9092',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+        except Exception as e:
+           print("from consumer 1")
+           print(e)
         self.ai_consumer = None
         self.activities = pd.DataFrame(columns=['datetimeutc', 'pid', 'database', 'appname', 'user', 'client', 'cpu', 'memory', 'read', 'write', 'duration', 'wait', 'io_wait', 'state', 'query'])
         self.pg_stat_activity = pd.DataFrame(columns=['datid', 'datname', 'pid', 'usesysid', 'usename', 'application_name', 'client_addr', 'client_hostname', 'client_port', 'backend_start', 'xact_start', 'query_start', 'state_change', 'wait_event_type', 'wait_event', 'state', 'backend_xid', 'backend_xmin', 'query', 'info'])
