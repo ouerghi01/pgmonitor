@@ -12,9 +12,9 @@ import csv
 
 class EmailSender:
     def __init__(self):
-        self.dbname = "bench"
+        self.dbname = "postgres"
         self.user = "postgres"
-        self.password = "123"
+        self.password = "postgres"
         self.email="mohamedaziz.ouerghi@etudiant-enit.utm.tn"
         self.password_email="14656747"
         self.to_email=self.email
@@ -23,7 +23,7 @@ class EmailSender:
                 dbname=self.dbname,
                 user=self.user,
                 password=self.password,
-                host='localhost',
+                host='postgresql_db',
                 port='5432'
             )
             print("Connection established.")
