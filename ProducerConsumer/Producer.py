@@ -79,9 +79,8 @@ class QueryTracker:
         if not self.initialized:
             self.ai_producer = AIOKafkaProducer(
             bootstrap_servers='kafka:9092',  # Use the Kafka service name and port exposed to other services
-            value_serializer=lambda v: json.dumps(v, default=str).encode('utf-8'),
-            enable_idempotence=True
-           )
+            value_serializer=lambda v: json.dumps(v, default=str).encode('utf-8')           
+            )
             await self.ai_producer.start()
             self.initialized = True
     @classmethod
@@ -158,10 +157,10 @@ def run_performance_test():
         raise FileNotFoundError(f"The file {bash_script_path} does not exist.")
     current_user = getpass.getuser()
     try:
-        subprocess.run(["sudo", "chown", current_user, bash_script_path], check=True)
-        subprocess.run(["sudo", "chown", "postgres", "ProducerConsumer/Pg_activity_Data/activities.csv"], check=True)
+        subprocess.run([ "chown", current_user, bash_script_path], check=True)
+        subprocess.run(["chown", "postgres", "ProducerConsumer/Pg_activity_Data/activities.csv"], check=True)
 
-        subprocess.run(["sudo", "chmod", "+x", bash_script_path], check=True)
+        subprocess.run(["chmod", "+x", bash_script_path], check=True)
     except subprocess.CalledProcessError as e:
         print(e.stderr)
         exit(1)
@@ -184,10 +183,14 @@ def run_performance_test():
 class Handler(PatternMatchingEventHandler):
     def __init__(self, event_stop):
         PatternMatchingEventHandler.__init__(self, patterns=['*.csv'], ignore_directories=True, case_sensitive=False)
-        self.producer=KafkaProducer(
-            bootstrap_servers='kafka:9092',
+        try:
+            self.producer=KafkaProducer(
+            bootstrap_servers='kafka:9093',
             value_serializer=lambda v: json.dumps(v).encode('utf-8')
-        )
+            )
+        except Exception as e:
+            logger.error("Error occurred while creating Kafka producer: %s", str(e))
+            raise
         self.event_stop = event_stop
         self.temp_filename_csv = r"./ProducerConsumer/Pg_activity_Data/activities.csv"
         self.last_position = 0

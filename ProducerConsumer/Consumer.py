@@ -45,7 +45,7 @@ class ConsumerVisualizer:
         self.system_load_line={}
         try:
 
-           self.consumer =KafkaConsumer("db-monitoring", bootstrap_servers='kafka:9092',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+           self.consumer =KafkaConsumer("db-monitoring", bootstrap_servers='kafka:9093',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
         except Exception as e:
            print("from consumer 1")
            print(e)

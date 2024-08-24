@@ -10,10 +10,9 @@ def run_performance_test():
     bash_script_path = 'ProducerConsumer/ActivityWatcher/pgbench_run.sh'
     if not os.path.exists(bash_script_path):
         raise FileNotFoundError(f"The file {bash_script_path} does not exist.")
-    current_user = getpass.getuser()
+    #current_user = getpass.getuser()
     try:
-        subprocess.run(["sudo", "chown", current_user, bash_script_path], check=True)
-        subprocess.run(["sudo", "chmod", "+x", bash_script_path], check=True)
+        subprocess.run([ "chmod", "+x", bash_script_path], check=True)
     except subprocess.CalledProcessError as e:
         print(e.stderr)
         exit(1)
@@ -29,7 +28,10 @@ def run_performance_test():
 def DBStressMonitor():
     #print("DB Stress Monitor started")
     while True:
-        run_performance_test()
+        try:
+            run_performance_test()
+        except Exception as e:
+            print(f"An error occurred while running performance test: {str(e)}")
         stop_event.clear()  
         time.sleep(60)  
 
