@@ -39,17 +39,18 @@ services:
       - POSTGRESQL_PASSWORD=postgres
       - POSTGRESQL_DATABASE=postgres
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Expose PostgreSQL on TCP port 5432
     volumes:
       - "postgresql_data:/bitnami"
-      - "./ProducerConsumer:/scripts"
     networks:
       - app_network
-
   python_app:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - ".:/scripts"
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - kafka
       - postgresql_db
@@ -75,3 +76,4 @@ volumes:
     driver: local
   postgresql_data:
     driver: local
+  

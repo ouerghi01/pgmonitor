@@ -33,8 +33,7 @@ def producer(event_stop):
     run_producer(event_stop)
     
 
-def ProducerConsumer():
-    event_stop = asyncio.Event() 
+def ProducerConsumer(event_stop):
     consumer_process = Process(target=consumer, args=(event_stop,))
     producer_process = Process(target=producer, args=(event_stop, ))
     consumer_process.start()
@@ -42,9 +41,9 @@ def ProducerConsumer():
     consumer_process.join()
     producer_process.join()
 
-def ExecuteProducerConsumer():
+def ExecuteProducerConsumer(event_stop):
      while True :
-      ProducerConsumer()
+      ProducerConsumer(event_stop)
 
 
 

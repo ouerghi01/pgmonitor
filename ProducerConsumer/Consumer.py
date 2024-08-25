@@ -103,7 +103,7 @@ class ConsumerVisualizer:
         if not self.initialized:
 
           try:
-             self.ai_consumer = AIOKafkaConsumer('query-monitoring', bootstrap_servers='kafka:9092',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+             self.ai_consumer = AIOKafkaConsumer('query-monitoring', bootstrap_servers='kafka:9093',auto_offset_reset='earliest',enable_auto_commit=True,value_deserializer=lambda x: json.loads(x.decode('utf-8')))
              await self.ai_consumer.start()
           except Exception  as e:
               logger.exception("Error async consuming %s", e)

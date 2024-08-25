@@ -5,6 +5,8 @@ from datetime import datetime
 import asyncpg
 import asyncio
 import logging
+import docker
+
 import csv
 import random
 from sshtunnel import SSHTunnelForwarder
@@ -22,7 +24,8 @@ import subprocess
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
+import tarfile
+import io
 class QueryTracker:
     _instance = None
     _connection_pool = None
@@ -151,35 +154,35 @@ class QueryTracker:
                 logger.error("Error occurred during query execution: %s", str(result))
         
 def run_performance_test():
-    #sudo -u postgres pg_activity --output $tempfile -U postgres
     bash_script_path = 'ProducerConsumer/pg_activity.sh'
+    
+    # Check if the script exists
     if not os.path.exists(bash_script_path):
         raise FileNotFoundError(f"The file {bash_script_path} does not exist.")
-    current_user = getpass.getuser()
+    
+    
     try:
-        subprocess.run([ "chown", current_user, bash_script_path], check=True)
-        subprocess.run(["chown", "postgres", "ProducerConsumer/Pg_activity_Data/activities.csv"], check=True)
-
-        subprocess.run(["chmod", "+x", bash_script_path], check=True)
-    except subprocess.CalledProcessError as e:
-        print(e.stderr)
-        exit(1)
-    try:
-        result = subprocess.Popen([
-            "docker", "exec", "-it", "postgresql_db", bash_script_path
-        ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(
+            [bash_script_path],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        print(result.stdout)
         
-        stdout, stderr = result.communicate()
-        if result.returncode != 0:
-            print(f"Error running the script: {stderr}")
-            exit(1)
-        if result.pid:
-            print(f"Script PID: {result.pid}")
-        
+        if result.returncode == 0:
+            print("Script output:")
+            print(result.stdout)
+        else:
+            print(f"Error: {result.stderr}")
+    
+    except FileNotFoundError as e:
+        print(f"File error: {str(e)}")
     except subprocess.CalledProcessError as e:
-        print(e.stderr)
-        exit(1)
-
+        print(f"Subprocess error: {e.stderr}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {str(e)}")
 class Handler(PatternMatchingEventHandler):
     def __init__(self, event_stop):
         PatternMatchingEventHandler.__init__(self, patterns=['*.csv'], ignore_directories=True, case_sensitive=False)
@@ -192,8 +195,9 @@ class Handler(PatternMatchingEventHandler):
             logger.error("Error occurred while creating Kafka producer: %s", str(e))
             raise
         self.event_stop = event_stop
-        self.temp_filename_csv = r"./ProducerConsumer/Pg_activity_Data/activities.csv"
+        self.temp_filename_csv = r"/scripts/Pg_activity_Data/activities.csv"
         self.last_position = 0
+        self.docker_client = docker.from_env()
         self.skip_header = False
         super().__init__()
     def on_modified(self, event) -> None:
@@ -202,39 +206,53 @@ class Handler(PatternMatchingEventHandler):
        
     def process_event(self, event):
         try:
-              with open(event.src_path, 'r') as f:
-                rows = list(csv.reader(f))
-                if len(rows) <= 1:
-                    return  
-                last_line = rows[-1]
-                if (len(last_line)>1):
-                    last_line = last_line[0]+","+last_line[1]
-                else:
-                    last_line = last_line[0]
-                if not last_line:
-                    time.sleep(0.01)
-                    return
-                
-                parts = last_line.split(";")
-                if len(parts) >= 14:
-                    record = {
-                        "datetimeutc": parts[0].strip('"'),
-                        "pid": parts[1].strip('"'),
-                        "database": parts[2].strip('"'),
-                        "appname": parts[3].strip('"'),
-                        "user": parts[4].strip('"'),
-                        "client": parts[5].strip('"'),
-                        "cpu": parts[6].strip('"'),
-                        "memory": parts[7].strip('"'),
-                        "read": parts[8].strip('"'),
-                        "write": parts[9].strip('"'),
-                        "duration": parts[10].strip('"'),
-                        "wait": parts[11].strip('"'),
-                        "io_wait": parts[12].strip('"'),
-                        "state": parts[13].strip('"'),
-                        "query": ";".join(parts[14:]).strip('"'),
-                    }
-                    self.producer.send(topic='db-monitoring', key=f"{random.randrange(999)}".encode(), value=record)
+            try:
+                container = self.docker_client.containers.get('python_app')
+                exec_command = f'cat {self.temp_filename_csv}'
+                result = container.exec_run(exec_command)
+                file_content = result.output.decode('utf-8')
+            except docker.errors.NotFound as e:
+                logger.error("Docker container not found: %s", str(e))
+                raise
+            except docker.errors.APIError as e:
+                logger.error("Error occurred while executing Docker command: %s", str(e))
+                raise
+            except Exception as e:
+                logger.error("An unexpected error occurred: %s", str(e))
+                raise
+
+            rows = list(csv.reader(file_content.splitlines()))
+            if len(rows) <= 1:
+                return
+            last_line = rows[-1]
+            if (len(last_line) > 1):
+                last_line = last_line[0] + "," + last_line[1]
+            else:
+                last_line = last_line[0]
+            if not last_line:
+                time.sleep(0.01)
+                return
+
+            parts = last_line.split(";")
+            if len(parts) >= 14:
+                record = {
+                    "datetimeutc": parts[0].strip('"'),
+                    "pid": parts[1].strip('"'),
+                    "database": parts[2].strip('"'),
+                    "appname": parts[3].strip('"'),
+                    "user": parts[4].strip('"'),
+                    "client": parts[5].strip('"'),
+                    "cpu": parts[6].strip('"'),
+                    "memory": parts[7].strip('"'),
+                    "read": parts[8].strip('"'),
+                    "write": parts[9].strip('"'),
+                    "duration": parts[10].strip('"'),
+                    "wait": parts[11].strip('"'),
+                    "io_wait": parts[12].strip('"'),
+                    "state": parts[13].strip('"'),
+                    "query": ";".join(parts[14:]).strip('"'),
+                }
+                self.producer.send(topic='db-monitoring', key=f"{random.randrange(999)}".encode(), value=record)
         except FileNotFoundError as e:
             print(f"Error: {e}")
             self.event_stop.set()
