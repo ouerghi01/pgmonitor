@@ -47,7 +47,7 @@ $ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic pageview
 >
 $ kafka-topics.sh --list --bootstrap-server localhost:9092
 > pageview
-```
+```kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic db-monitoring --from-beginning
 
 kafka-topics.sh is a script shipped with Kafka to help us manipulate the topics. In the first command, we created a topic called pageview. The argument bootstrap-server points to our brokers. As we run the command inside of the broker container, we provided localhost:9092
 Right now, our topic has the default configuration, but we will check out different configurations as we go.

@@ -48,9 +48,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - ".:/scripts"
-      - /var/run/docker.sock:/var/run/docker.sock
+    volumes:      
+      - .:/app  
+      - /var/run/docker.sock:/var/run/docker.sock  # Necessary for Docker client communication
     depends_on:
       - kafka
       - postgresql_db

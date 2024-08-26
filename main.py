@@ -14,6 +14,7 @@ def runDBStressMonitor():
     event_stop = asyncio.Event() 
     def db_stress_monitor_wrapper(event_stop):
         try:
+            print("DBStressMonitor started")
             DBStressMonitor(event_stop)
         except Exception as e:
             logging.error(f"Error in DBStressMonitor: {e}")
