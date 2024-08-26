@@ -1,6 +1,6 @@
-.gitignor
 .git
 __pycache__
 *.pyc
 *.pyo
 .env
+

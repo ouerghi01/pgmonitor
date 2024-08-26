@@ -15,8 +15,8 @@ services:
   kafka:
     image: docker.io/bitnami/kafka:3.8
     ports:
-      - "9092:9092"  # External port
-      - "9093:9093"  # Internal port for communication within the Docker network
+      - "9092:9092"  
+      - "9093:9093"  
     volumes:
       - "kafka_data:/bitnami"
     environment:
@@ -31,6 +31,24 @@ services:
       - zookeeper
     networks:
       - app_network
+  pg_activity:
+    image: tophfr/pg_activity:$TAG
+    build: 
+      context: pg_activity
+    args:
+      PG_ACTIVITY_VERSION: $VERSION
+    environment:
+      - PG_PRIMARY_HOST=postgresql_db
+      - PG_PRIMARY_PORT=5432
+      - PG_PRIMARY_USER=postgres
+      - PG_PRIMARY_PASSWORD=postgres
+    volumes:
+      - "pg_activity_data:/app/ProducerConsumer/Pg_activity_data"
+    networks:
+      - app_network
+    depends_on:
+      - postgresql_db 
+    command: ["pg_activity", "--output=ProducerConsumer/Pg_activity_Data/activities.csv"]  
 
   postgresql_db:
     image: docker.io/bitnami/postgresql:16
@@ -42,18 +60,22 @@ services:
       - "5432:5432"  # Expose PostgreSQL on TCP port 5432
     volumes:
       - "postgresql_data:/bitnami"
+  
     networks:
       - app_network
+    
   python_app:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:      
-      - .:/app  
-      - /var/run/docker.sock:/var/run/docker.sock  # Necessary for Docker client communication
+    volumes:
+      - .:/app  # Mount current directory to /app in the container
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "pg_activity_data:/app/ProducerConsumer/Pg_activity_data"  # Use same volume for consistency
     depends_on:
       - kafka
       - postgresql_db
+      - pg_activity
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9093  # Internal Docker network port
       - KAFKA_TOPIC=events
@@ -75,5 +97,7 @@ volumes:
   kafka_data:
     driver: local
   postgresql_data:
+    driver: local
+  pg_activity_data:
     driver: local
   

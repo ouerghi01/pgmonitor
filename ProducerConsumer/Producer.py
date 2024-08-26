@@ -162,7 +162,8 @@ def run_performance_test():
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True
-        )        
+        ) 
+        print("Script output:", result.stdout)
         if result.returncode == 0:
             print("Script output:")
             print(result.stdout)

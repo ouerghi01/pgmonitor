@@ -10,11 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the application files to the working directory
 COPY . .
-
-# Ensure the script has the correct permissions
-RUN chmod +x /app/ProducerConsumer/pg_activity.sh
 
 # Install Python dependencies
 RUN python3 -m pip install --upgrade pip
