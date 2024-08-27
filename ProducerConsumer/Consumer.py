@@ -95,7 +95,7 @@ class ConsumerVisualizer:
         self.event_stop = _event_stop
         self.retrain_interval = 100  # Retrain after every 100 messages
         self.message_count = 0
-        self.emailSender=EmailSender()
+        #self.emailSender=EmailSender()
         self.initialized=False
         self.pipeline=AnomalyDetectionPipeline(columns=self.activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor.h5')
         #self.new_pieline=AnomalyDetectionPipeline(columns=self.activities.columns,path='ProducerConsumer/Anomaly_detection_pipeline/models/xprocessor_1.pkl')

@@ -24,16 +24,13 @@ class QueryTracker:
     _instance = None
     _connection_pool = None
     _ssh_tunnel = None
-    dbname = "postgres"
-    user = "postgres"
-    password = "postgres"
     db_params = {
-        'database': dbname,
-        'user': user,
-        'password': password,
-        'host': 'postgresql_db',  # Connect through local port after tunneling
-        'port': '5432'        # Local port after forwarding
-    }
+    'database': "postgres",
+    'user': "postgres",
+    'password': "postgres",
+    'host': 'postgresql_db',  # Host matches the service name in Docker Compose
+    'port': '5432',  # Matches the exposed port
+    } 
     # SSH and database credentials
     #ssh_host = "192.168.1.1"
     #ssh_port = 22
@@ -93,11 +90,15 @@ class QueryTracker:
               # )
               
               #cls._ssh_tunnel.start()
-              cls._connection_pool = await asyncpg.create_pool(
+              try:
+                cls._connection_pool = await asyncpg.create_pool(
                     **cls.db_params,
                     max_size=100,
                     min_size=50
                 )
+              except Exception as e:
+                logger.exception("Error establishing database connection pool: %s", e)
+                raise
               logger.info("Database pool connection opened")
            except Exception as e:
                 logger.exception("Error establishing database connection pool: %s", e)
@@ -105,8 +106,7 @@ class QueryTracker:
     async def run_query(self, query):
         if not self._connection_pool:
             await self.establish_connection()
-        query_type, query_string = query
-        
+        query_type, query_string = query        
         try:
             async with self._connection_pool.acquire() as conn:
                 rows = await conn.fetch(query_string)
@@ -259,6 +259,7 @@ async def query_monitoring_task(event_stop):
         event_stop.set()
         return
 def start_query_monitoring(event_stop):
+    logger.info("Starting query monitoring task")
     asyncio.run(query_monitoring_task(event_stop))
 def Producer_Data_Monitoring(event_stop, temp_filename):
     process_query_monitoring = Process(target=start_query_monitoring, args=(event_stop,))

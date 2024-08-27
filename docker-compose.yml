@@ -32,30 +32,31 @@ services:
     networks:
       - app_network
   pg_activity:
-    image: tophfr/pg_activity:$TAG
+    image: tophfr/pg_activity:${TAG}
     build: 
       context: pg_activity
-    args:
-      PG_ACTIVITY_VERSION: $VERSION
-    environment:
-      - PG_PRIMARY_HOST=postgresql_db
-      - PG_PRIMARY_PORT=5432
-      - PG_PRIMARY_USER=postgres
-      - PG_PRIMARY_PASSWORD=postgres
+      dockerfile: Dockerfile
+      args:
+        PG_ACTIVITY_VERSION: ${VERSION}  # Fixed the syntax for passing ARG
+    environment: &pgenv
+      PGHOST: postgresql_db
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
     volumes:
-      - "pg_activity_data:/app/ProducerConsumer/Pg_activity_data"
+      - "Pg_activity_Data:/app/ProducerConsumer/Pg_activity_Data"  # Make sure directory path case matches your Dockerfile
     networks:
       - app_network
     depends_on:
-      - postgresql_db 
-    command: ["pg_activity", "--output=ProducerConsumer/Pg_activity_Data/activities.csv"]  
+      postgresql_db:
+        condition: service_healthy # Wait for PostgreSQL to be healthy before starting pg_activity
 
   postgresql_db:
     image: docker.io/bitnami/postgresql:16
-    environment:
-      - POSTGRESQL_USERNAME=postgres
-      - POSTGRESQL_PASSWORD=postgres
-      - POSTGRESQL_DATABASE=postgres
+    environment: 
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
     ports:
       - "5432:5432"  # Expose PostgreSQL on TCP port 5432
     volumes:
@@ -63,6 +64,14 @@ services:
   
     networks:
       - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+
     
   python_app:
     build:
@@ -71,7 +80,7 @@ services:
     volumes:
       - .:/app  # Mount current directory to /app in the container
       - /var/run/docker.sock:/var/run/docker.sock
-      - "pg_activity_data:/app/ProducerConsumer/Pg_activity_data"  # Use same volume for consistency
+      - "Pg_activity_Data:/app/ProducerConsumer/Pg_activity_Data"  # Use same volume for consistency
     depends_on:
       - kafka
       - postgresql_db
@@ -98,6 +107,6 @@ volumes:
     driver: local
   postgresql_data:
     driver: local
-  pg_activity_data:
+  Pg_activity_Data:
     driver: local
   

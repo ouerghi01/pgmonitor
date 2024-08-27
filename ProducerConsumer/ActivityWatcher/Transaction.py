@@ -6,9 +6,7 @@ import subprocess
 counter = 0
 def run_performance_test():
     print("Running performance test...\n")
-    bash_script_path = 'ProducerConsumer/ActivityWatcher/pgbench_run.sh'
-    
-    # Ensure the script exists
+    bash_script_path = 'ProducerConsumer/ActivityWatcher/pgbench_run.sh'    
     if not os.path.exists(bash_script_path):
         raise FileNotFoundError(f"The file {bash_script_path} does not exist.")
     
@@ -41,9 +39,9 @@ def run_performance_test():
         print(f"Subprocess error: {str(e)}")
     except Exception as e:
         print(f"An unexpected error occurred: {str(e)}")
-def DBStressMonitor(event_stop):
+def DBStressMonitor():
     print("Running DB Stress Monitor.....   ..\n")
-    while not event_stop.is_set():
+    while True:
         try:
             run_performance_test()
         except Exception as e:
