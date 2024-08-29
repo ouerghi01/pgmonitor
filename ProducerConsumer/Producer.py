@@ -147,35 +147,7 @@ class QueryTracker:
             if isinstance(result, Exception):
                 logger.error("Error occurred during query execution: %s", str(result))
         
-def run_performance_test():
-    logger.info("Running performance test")
-    bash_script_path = 'ProducerConsumer/pg_activity.sh'
-    # Check if the script exists
-    if not os.path.exists(bash_script_path):
-        raise FileNotFoundError(f"The file {bash_script_path} does not exist.")
-    try:
-        subprocess.run(['chmod', '+x', bash_script_path], check=True)
 
-        result = subprocess.run(
-            [bash_script_path],
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        ) 
-        print("Script output:", result.stdout)
-        if result.returncode == 0:
-            print("Script output:")
-            print(result.stdout)
-        else:
-            print(f"Error: {result.stderr}")
-    
-    except FileNotFoundError as e:
-        print(f"File error: {str(e)}")
-    except subprocess.CalledProcessError as e:
-        print(f"Subprocess error: {e.stderr}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {str(e)}")
 class Handler(PatternMatchingEventHandler):
     def __init__(self, event_stop):
         PatternMatchingEventHandler.__init__(self, patterns=['*.csv'], ignore_directories=True, case_sensitive=False)
@@ -195,6 +167,7 @@ class Handler(PatternMatchingEventHandler):
         super().__init__()
     def on_modified(self, event) -> None:
         if event.src_path==self.temp_filename_csv: 
+            print("something happen in the file \n")
             self.process_event(event)
        
     def process_event(self, event):

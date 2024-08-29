@@ -1,0 +1,18 @@
+FROM postgres:latest
+
+# Install pgbench if not already included
+RUN apt-get update && apt-get install -y postgresql-contrib
+
+WORKDIR /app
+
+# Copy the script and SQL files
+COPY pgbench_run.sh /app/
+COPY init_custom_pgbench.sql /app/
+COPY select_custom_pgbench.sql /app/
+COPY delete_custom_pgbench.sql /app/
+
+# Ensure the script has execute permissions
+RUN chmod +x /app/pgbench_run.sh
+
+# Set the entry point for the container
+ENTRYPOINT ["/app/pgbench_run.sh"]

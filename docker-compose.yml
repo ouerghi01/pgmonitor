@@ -43,6 +43,7 @@ services:
       PGPORT: 5432
       PGUSER: postgres
       PGPASSWORD: postgres
+      PGDATABASE: postgres
     volumes:
       - "Pg_activity_Data:/app/ProducerConsumer/Pg_activity_Data"  # Make sure directory path case matches your Dockerfile
     networks:
@@ -50,7 +51,24 @@ services:
     depends_on:
       postgresql_db:
         condition: service_healthy # Wait for PostgreSQL to be healthy before starting pg_activity
-
+  stress_tester:
+    build: ProducerConsumer/ActivityWatcher
+    depends_on:
+      postgresql_db:
+        condition: service_healthy
+    environment:
+      HOST: postgresql_db
+      PORT: 5432
+      USER: postgres
+      DBNAME: postgres
+      CONNECTIONS: 50       
+      DURATION: 100         
+      DELETE_CONNECTIONS: 1 
+      DELETE_DURATION: 1    
+      PGPASSWORD: postgres  
+    restart: always
+    networks:
+      - app_network
   postgresql_db:
     image: docker.io/bitnami/postgresql:16
     environment: 
