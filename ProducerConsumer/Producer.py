@@ -99,7 +99,7 @@ class QueryTracker:
               except Exception as e:
                 logger.exception("Error establishing database connection pool: %s", e)
                 raise
-              logger.info("Database pool connection opened")
+              logger.info(" i need this  :: Database pool connection opened")
            except Exception as e:
                 logger.exception("Error establishing database connection pool: %s", e)
         return cls._connection_pool

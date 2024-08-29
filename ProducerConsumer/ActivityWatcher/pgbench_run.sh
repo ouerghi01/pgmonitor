@@ -32,7 +32,7 @@ until pg_isready -h "$HOST" -p "$PORT" -U "$USER"; do
 done
 
 # Run pgbench commands
-run_pgbench "/app/init_custom_pgbench.sql" "$CONNECTIONS" "$DURATION"
+#run_pgbench "/app/init_custom_pgbench.sql" "$CONNECTIONS" "$DURATION"
 run_pgbench "/app/select_custom_pgbench.sql" "$CONNECTIONS" "$DURATION"
 run_pgbench "/app/delete_custom_pgbench.sql" "$DELETE_CONNECTIONS" "$DELETE_DURATION"
 

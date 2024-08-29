@@ -69,6 +69,7 @@ services:
     restart: always
     networks:
       - app_network
+    
   postgresql_db:
     image: docker.io/bitnami/postgresql:16
     environment: 

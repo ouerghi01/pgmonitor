@@ -1,1 +1,1 @@
-select * from users, posts where users.id = posts.user_id  limit 10;
+select * from users ;

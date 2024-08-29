@@ -1,10 +1,5 @@
+
 DO $$
-DECLARE
-    user_id INT;
-    gender CHAR(1);
-    age INT;
-    address TEXT;
-    u_id INT;
 BEGIN
     -- Create users table if it doesn't exist
     IF NOT EXISTS (
@@ -39,28 +34,33 @@ BEGIN
                 user_id INT REFERENCES users(id),
                 title VARCHAR(255) NOT NULL,
                 content TEXT NOT NULL,
-                created_at TIMESTAMP NOT NULL
+                created_at TIMESTAMP NOT NULL DEFAULT now()
             )
         ';
     END IF;
 
-    -- Generate sample data
-    FOR p IN 1..10 LOOP  -- Change 10 to the number of users/posts you want to generate
-        -- Generate random user data
-        u_id := (random() * 100000 + 1)::INT;
-        gender := CASE WHEN random() > 0.5 THEN 'M' ELSE 'F' END;
-        age := (random() * 50 + 18)::INT;  -- Age range from 18 to 68
-        address := '123 Main St, Apt ' || ((random() * 100) + 1)::INT || ', City, Country';
-
-        -- Insert a user and get the user_id
+    -- Insert a single user with random data
+    PERFORM (
         INSERT INTO users (username, email, firstname, age, gender, address)
-        VALUES ('user_' || u_id, 'user_' || u_id || '@example.com', 'Firstname_' || u_id, age, gender, address)
-        RETURNING id INTO user_id;
+        VALUES (
+            'user_' || (random() * 100000 + 1)::INT,
+            'user_' || (random() * 100000 + 1)::INT || '@example.com',
+            'Firstname_' || (random() * 100000 + 1)::INT,
+            (random() * 50 + 18)::INT,  -- Age range from 18 to 68
+            CASE WHEN random() > 0.5 THEN 'M' ELSE 'F' END,
+            '123 Main St, Apt ' || ((random() * 100) + 1)::INT || ', City, Country'
+        )
+        RETURNING id
+    ) INTO user_id;
 
-        -- Insert a post for the newly created user
-        INSERT INTO posts (user_id, title, content, created_at)
-        VALUES (user_id, 'Post ' || p, 'Content of post ' || p, now() - interval '1 day' * p);
+    -- Insert a single post for the newly created user
+    INSERT INTO posts (user_id, title, content)
+    VALUES (
+        user_id,
+        'Sample Post Title',
+        'This is a sample post content.'
+    );
 
-        COMMIT;
-    END LOOP;
+    -- Commit the transaction
+    COMMIT;
 END $$;
