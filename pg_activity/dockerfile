@@ -1,8 +1,14 @@
 FROM python:3.11-alpine
 LABEL maintainer="toph <toph@toph.fr>"
+
+# Install required packages
 RUN apk add --no-cache postgresql-libs
+
+# Set the pg_activity version as a build argument and environment variable
 ARG PG_ACTIVITY_VERSION=3.0.1
 ENV PG_ACTIVITY_VERSION $PG_ACTIVITY_VERSION
+
+# Install dependencies and build pg_activity
 RUN apk add --no-cache --virtual .build-deps \
         gcc \
         linux-headers \
@@ -11,5 +17,15 @@ RUN apk add --no-cache --virtual .build-deps \
     && pip3 install psycopg2-binary \
     && pip3 install pg_activity==$PG_ACTIVITY_VERSION \
     && apk del .build-deps
+
+# Create the necessary directory for output
 RUN mkdir -p /app/ProducerConsumer/Pg_activity_Data
-ENTRYPOINT ["pg_activity", "--output=/app/ProducerConsumer/Pg_activity_Data/activities.csv"]
+
+# Install sudo since it is not included in Alpine by default
+RUN apk add --no-cache sudo
+
+# Add the postgres user to sudoers without a password
+RUN echo "postgres ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Use ENTRYPOINT to run pg_activity as the postgres user
+ENTRYPOINT ["sudo", "-u", "postgres", "pg_activity", "--output=/app/ProducerConsumer/Pg_activity_Data/activities.csv", "-U", "postgres"]

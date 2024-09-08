@@ -1,1131 +1,1032 @@
-[08/Sep/2024 10:27:58] INFO - generated new fontManager
-Consumer started
-Consumer_1 started
-[08/Sep/2024 10:28:09] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:28:09] INFO - Probing node bootstrap-0 broker version
-Producer started
-[08/Sep/2024 10:28:09] INFO - Starting data monitoring
-[08/Sep/2024 10:28:09] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Connection complete.
-[08/Sep/2024 10:28:09] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:28:09] INFO - Probing node bootstrap-0 broker version
-[08/Sep/2024 10:28:09] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Connection complete.
-[08/Sep/2024 10:28:09] INFO - Broker version identified as 2.6.0
-[08/Sep/2024 10:28:09] INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
-[08/Sep/2024 10:28:09] WARNING - group_id is None: disabling auto-commit.
-[08/Sep/2024 10:28:09] INFO - Updating subscribed topics to: ('db-monitoring',)
-[08/Sep/2024 10:28:09] INFO - Broker version identified as 2.6.0
-[08/Sep/2024 10:28:09] INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
-[08/Sep/2024 10:28:09] INFO - Starting query monitoring task
-[08/Sep/2024 10:28:09] INFO - Establishing database connection ....
-[08/Sep/2024 10:28:09] INFO - Establishing database connection ....
-[08/Sep/2024 10:28:09] INFO - Establishing database connection ....
-[08/Sep/2024 10:28:09] INFO - Establishing database connection ....
-[08/Sep/2024 10:28:09] INFO - ai_consumer started
+PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 0 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 6 active ⋅ 45 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 8777 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+123    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+147    postgres           pgbench         postgres    172.26.0.5/32  0.000000
 
-[08/Sep/2024 10:28:09] INFO - Updating subscribed topics to: frozenset({'query-monitoring'})
-[08/Sep/2024 10:28:09] INFO - Metadata for topic has changed from {} to {'query-monitoring': 1}. 
-[08/Sep/2024 10:28:19] INFO - Updated partition assignment: [TopicPartition(topic='db-monitoring', partition=0)]
-Dash is running on http://0.0.0.0:8050/
 
-[08/Sep/2024 10:28:19] INFO - Dash is running on http://0.0.0.0:8050/
 
-[08/Sep/2024 10:28:19] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:28:19] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Connection complete.
-[08/Sep/2024 10:28:19] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connected> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. 
- * Serving Flask app 'ProducerConsumer.Consumer'
- * Debug mode: off
-[08/Sep/2024 10:28:19] INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:8050
- * Running on http://172.25.0.7:8050
-[08/Sep/2024 10:28:19] INFO - [33mPress CTRL+C to quit[0m
-db-monitoring
-            datetimeutc  ...                                              query
-0  2024-09-08T10:09:24Z  ...  SELECT backend_type, SUM(reads + writes + writ...
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 323ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 323ms/step
-[08/Sep/2024 10:28:20] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:44Z  ...  SELECT s.schemaname, s.relname AS table_name
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 24ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 24ms/step
-[08/Sep/2024 10:28:20] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:48Z  ...  SELECT s.schemaname, s.relname AS table_name
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 27ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 27ms/step
-[08/Sep/2024 10:28:20] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:13Z  ...  SELECT s.schemaname, s.relname AS table_name
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 38ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 38ms/step
-[08/Sep/2024 10:28:21] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-[08/Sep/2024 10:28:21] INFO - Database pool connection opened
-[08/Sep/2024 10:28:21] INFO -  i need this  :: Database pool connection opened
-[08/Sep/2024 10:28:21] INFO - Database pool connection opened
-[08/Sep/2024 10:28:21] INFO -  i need this  :: Database pool connection opened
-[08/Sep/2024 10:28:21] INFO - Database pool connection opened
-[08/Sep/2024 10:28:21] INFO -  i need this  :: Database pool connection opened
-[08/Sep/2024 10:28:21] INFO - Database pool connection opened
-[08/Sep/2024 10:28:21] INFO -  i need this  :: Database pool connection opened
-something happen in the file 
 
-[08/Sep/2024 10:28:39] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-Record: {'datetimeutc': '2024-09-08T10:09:39Z', 'pid': '699', 'database': 'postgres', 'appname': '', 'user': 'postgres', 'client': '172.25.0.7/32', 'cpu': 'N/A', 'memory': 'N/A', 'read': 'N/A', 'write': 'N/A', 'duration': '-0.001069', 'wait': 'Y', 'io_wait': 'N/A', 'state': 'active', 'query': 'SELECT s.schemaname, s.relname AS table_name'}
-[08/Sep/2024 10:28:39] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:28:39] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Connection complete.
-[08/Sep/2024 10:28:39] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connected> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. 
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:39Z  ...  SELECT s.schemaname, s.relname AS table_name
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 24ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step
-[08/Sep/2024 10:28:39] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-something happen in the file 
 
-[08/Sep/2024 10:28:41] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-[08/Sep/2024 10:28:45] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:45] "GET / HTTP/1.1" 200 -
-[08/Sep/2024 10:28:45] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:45] "GET /_dash-component-suites/dash/deps/polyfill@7.v2_17_1m1725790905.12.1.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:28:45] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:45] "GET /_dash-component-suites/dash/deps/react-dom@16.v2_17_1m1725790905.14.0.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:28:45] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:45] "GET /_dash-component-suites/dash/deps/prop-types@15.v2_17_1m1725790905.8.1.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:28:45] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:45] "GET /_dash-component-suites/dash/deps/react@16.v2_17_1m1725790905.14.0.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:28:45] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:45] "GET /_dash-component-suites/dash_bootstrap_components/_components/dash_bootstrap_components.v1_6_0m1725790946.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:28:45] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:45] "GET /_dash-component-suites/dash/dash-renderer/build/dash_renderer.v2_17_1m1725790905.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:28:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:46] "GET /_dash-component-suites/dash/dcc/dash_core_components.v2_14_1m1725790905.js HTTP/1.1" 200 -
-[08/Sep/2024 10:28:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:46] "GET /_dash-component-suites/dash/dcc/dash_core_components-shared.v2_14_1m1725790905.js HTTP/1.1" 200 -
-[08/Sep/2024 10:28:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:46] "GET /_dash-component-suites/dash/dash_table/bundle.v5_2_11m1725790905.js HTTP/1.1" 200 -
-[08/Sep/2024 10:28:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:46] "GET /_dash-component-suites/dash/html/dash_html_components.v2_0_18m1725790905.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:28:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:46] "[36mGET /assets/styles.css?m=1725724017.423114 HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:28:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:46] "GET /_dash-layout HTTP/1.1" 200 -
-[08/Sep/2024 10:28:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:46] "GET /_dash-dependencies HTTP/1.1" 200 -
-[08/Sep/2024 10:28:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:46] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:28:47] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:47] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:28:47] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:47] "[36mGET /_dash-component-suites/dash/dcc/async-graph.js HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:28:47] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:47] "[36mGET /_dash-component-suites/dash/dcc/async-dropdown.js HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:28:48] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:48] "[36mGET /_dash-component-suites/plotly/package_data/plotly.min.js HTTP/1.1[0m" 304 -
-something happen in the file 
 
-[08/Sep/2024 10:28:55] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-[08/Sep/2024 10:28:56] INFO - 172.25.0.1 - - [08/Sep/2024 10:28:56] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:29:00] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:00] "GET /Query_Performance HTTP/1.1" 200 -
-[08/Sep/2024 10:29:00] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:00] "[36mGET /assets/styles.css?m=1725724017.423114 HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:29:01] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:01] "GET /_dash-layout HTTP/1.1" 200 -
-[08/Sep/2024 10:29:01] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:01] "GET /_dash-dependencies HTTP/1.1" 200 -
-something happen in the file 
 
-[08/Sep/2024 10:29:19] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-[08/Sep/2024 10:29:24] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:24] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:29:24] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:24] "GET /_dash-component-suites/dash/dash_table/async-highlight.js HTTP/1.1" 200 -
-[08/Sep/2024 10:29:24] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:24] "GET /_dash-component-suites/dash/dash_table/async-table.js HTTP/1.1" 200 -
-[08/Sep/2024 10:29:24] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:24] "[36mGET /_dash-component-suites/dash/dcc/async-graph.js HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:29:24] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:24] "[36mGET /_dash-component-suites/plotly/package_data/plotly.min.js HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:29:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:25] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:29:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:46] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:29:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:46] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:29:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:46] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:29:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:46] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:29:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:29:46] "POST /_dash-update-component HTTP/1.1" 200 -
-something happen in the file 
 
-[08/Sep/2024 10:30:24] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-something happen in the file 
 
-[08/Sep/2024 10:30:26] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-db-monitoring
-            datetimeutc  ...                                              query
-0  2024-09-08T10:09:26Z  ...  SELECT pg_advisory_unlock_all(); CLOSE ALL; UN...
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 4 active ⋅ 47 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 10232 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+121    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+136    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+154    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+117    postgres           pgbench         postgres    172.26.0.5/32  0.000000
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 26ms/step
-[08/Sep/2024 10:30:26] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /Overview HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-component-suites/dash/deps/polyfill@7.v2_17_1m1725790905.12.1.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-component-suites/dash_bootstrap_components/_components/dash_bootstrap_components.v1_6_0m1725790946.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-component-suites/dash/deps/react-dom@16.v2_17_1m1725790905.14.0.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-component-suites/dash/deps/prop-types@15.v2_17_1m1725790905.8.1.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-component-suites/dash/deps/react@16.v2_17_1m1725790905.14.0.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-component-suites/dash/dash-renderer/build/dash_renderer.v2_17_1m1725790905.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-component-suites/dash/dcc/dash_core_components-shared.v2_14_1m1725790905.js HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-component-suites/dash/dcc/dash_core_components.v2_14_1m1725790905.js HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "[36mGET /assets/styles.css?m=1725724017.423114 HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-component-suites/dash/html/dash_html_components.v2_0_18m1725790905.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-component-suites/dash/dash_table/bundle.v5_2_11m1725790905.js HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-layout HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "GET /_dash-dependencies HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "[36mGET /_dash-component-suites/dash/dcc/async-graph.js HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "[36mGET /_dash-component-suites/dash/dcc/async-dropdown.js HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:30:35] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:35] "[36mGET /_dash-component-suites/plotly/package_data/plotly.min.js HTTP/1.1[0m" 304 -
-Record: {'datetimeutc': '2024-09-08T10:09:26Z', 'pid': '549', 'database': 'postgres', 'appname': '', 'user': 'postgres', 'client': '172.25.0.7/32', 'cpu': 'N/A', 'memory': 'N/A', 'read': 'N/A', 'write': 'N/A', 'duration': '-0.001338', 'wait': 'Y', 'io_wait': 'N/A', 'state': 'active', 'query': 'SELECT pg_advisory_unlock_all(); CLOSE ALL; UNLISTEN *; RESET ALL;'}
-something happen in the file 
 
-[08/Sep/2024 10:30:40] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-[08/Sep/2024 10:30:46] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:46] "POST /_dash-update-component HTTP/1.1" 200 -
-something happen in the file 
 
-[08/Sep/2024 10:30:46] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-[08/Sep/2024 10:30:56] INFO - 172.25.0.1 - - [08/Sep/2024 10:30:56] "POST /_dash-update-component HTTP/1.1" 200 -
-something happen in the file 
 
-[08/Sep/2024 10:31:06] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-db-monitoring
-            datetimeutc  ...                                              query
-0  2024-09-08T10:09:06Z  ...  SELECT pg_advisory_unlock_all(); CLOSE ALL; UN...
 
-[1 rows x 15 columns]
-[08/Sep/2024 10:31:06] INFO - 172.25.0.1 - - [08/Sep/2024 10:31:06] "POST /_dash-update-component HTTP/1.1" 200 -
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 37ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 37ms/step
-[08/Sep/2024 10:31:06] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-Record: {'datetimeutc': '2024-09-08T10:09:06Z', 'pid': '699', 'database': 'postgres', 'appname': '', 'user': 'postgres', 'client': '172.25.0.7/32', 'cpu': 'N/A', 'memory': 'N/A', 'read': 'N/A', 'write': 'N/A', 'duration': '-0.001330', 'wait': 'Y', 'io_wait': 'N/A', 'state': 'active', 'query': 'SELECT pg_advisory_unlock_all(); CLOSE ALL; UNLISTEN *; RESET ALL;'}
-something happen in the file 
 
-[08/Sep/2024 10:31:08] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-[08/Sep/2024 10:31:10] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connected> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. KafkaConnectionError: Socket EVENT_READ without in-flight-requests
-[08/Sep/2024 10:31:10] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connected> [IPv4 ('172.25.0.5', 9093)]>: socket disconnected
-[08/Sep/2024 10:31:10] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connected> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. KafkaConnectionError: socket disconnected
-[08/Sep/2024 10:31:10] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:31:10] ERROR - Fetch to node 1001 failed: KafkaConnectionError: socket disconnected
-[08/Sep/2024 10:31:10] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:31:10] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:31:10] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:31:10] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:31:10] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:31:10] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:10] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:10] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:10] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:10] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:31:10] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:31:10] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:31:10] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:31:10] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:10] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:10] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:10] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:10] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:31:10] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:31:10] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:31:10] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:31:10] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:10] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:10] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:10] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:10] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:31:10] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:31:10] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:31:10] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:31:10] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:10] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:10] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:10] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:10] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:31:10] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:31:10] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:31:10] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:31:10] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:10] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:10] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:10] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:11] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:31:11] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:31:11] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:31:11] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:11] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:31:11] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:31:11] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:31:11] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:11] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:31:11] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:31:11] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:31:11] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.5', 9093)
-[08/Sep/2024 10:31:11] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:11] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:11] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:11] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:11] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:12] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:12] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:12] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:13] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:13] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:13] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:13] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:13] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:13] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:13] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:13] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:17] INFO - 172.25.0.1 - - [08/Sep/2024 10:31:17] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:31:17] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:17] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:17] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:17] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:17] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:17] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:18] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:18] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:18] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:18] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:19] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:19] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:20] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:20] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:20] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:20] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:20] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:20] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:31:20] ERROR - Unable connect to node with id 1001: [Errno -3] Temporary failure in name resolution
-[08/Sep/2024 10:31:20] ERROR - Unable to update metadata from [1001]
-Consumer started
-Consumer_1 started
-[08/Sep/2024 10:33:41] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:33:41] INFO - Probing node bootstrap-0 broker version
-[08/Sep/2024 10:33:41] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Connection complete.
-Producer started
-[08/Sep/2024 10:33:41] INFO - Starting data monitoring
-[08/Sep/2024 10:33:41] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:33:41] INFO - Probing node bootstrap-0 broker version
-[08/Sep/2024 10:33:41] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Connection complete.
-[08/Sep/2024 10:33:41] INFO - Broker version identified as 2.6.0
-[08/Sep/2024 10:33:41] INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
-[08/Sep/2024 10:33:41] WARNING - group_id is None: disabling auto-commit.
-[08/Sep/2024 10:33:41] INFO - Updating subscribed topics to: ('db-monitoring',)
-[08/Sep/2024 10:33:41] INFO - Broker version identified as 2.6.0
-[08/Sep/2024 10:33:41] INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
-[08/Sep/2024 10:33:41] INFO - Starting query monitoring task
-[08/Sep/2024 10:33:41] INFO - Establishing database connection ....
-[08/Sep/2024 10:33:41] INFO - Establishing database connection ....
-[08/Sep/2024 10:33:41] INFO - Establishing database connection ....
-[08/Sep/2024 10:33:41] INFO - Establishing database connection ....
-[08/Sep/2024 10:33:42] INFO - ai_consumer started
 
-[08/Sep/2024 10:33:42] INFO - Updating subscribed topics to: frozenset({'query-monitoring'})
-[08/Sep/2024 10:33:42] INFO - Metadata for topic has changed from {} to {'query-monitoring': 1}. 
-Dash is running on http://0.0.0.0:8050/
 
-[08/Sep/2024 10:33:52] INFO - Dash is running on http://0.0.0.0:8050/
 
-[08/Sep/2024 10:33:52] INFO - Updated partition assignment: [TopicPartition(topic='db-monitoring', partition=0)]
-[08/Sep/2024 10:33:52] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:33:52] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Connection complete.
-[08/Sep/2024 10:33:52] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connected> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. 
- * Serving Flask app 'ProducerConsumer.Consumer'
- * Debug mode: off
-[08/Sep/2024 10:33:52] INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:8050
- * Running on http://172.25.0.7:8050
-[08/Sep/2024 10:33:52] INFO - [33mPress CTRL+C to quit[0m
-db-monitoring
-            datetimeutc  ...                                              query
-0  2024-09-08T10:09:24Z  ...  SELECT backend_type, SUM(reads + writes + writ...
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 306ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 307ms/step
-[08/Sep/2024 10:33:53] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-[08/Sep/2024 10:33:53] INFO - Database pool connection opened
-[08/Sep/2024 10:33:53] INFO -  i need this  :: Database pool connection opened
-[08/Sep/2024 10:33:53] INFO - Database pool connection opened
-[08/Sep/2024 10:33:53] INFO -  i need this  :: Database pool connection opened
-[08/Sep/2024 10:33:53] INFO - Database pool connection opened
-[08/Sep/2024 10:33:53] INFO -  i need this  :: Database pool connection opened
-[08/Sep/2024 10:33:53] INFO - Database pool connection opened
-[08/Sep/2024 10:33:53] INFO -  i need this  :: Database pool connection opened
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:44Z  ...  SELECT s.schemaname, s.relname AS table_name
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 32ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 32ms/step
-[08/Sep/2024 10:33:53] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:48Z  ...  SELECT s.schemaname, s.relname AS table_name
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 34ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 34ms/step
-[08/Sep/2024 10:33:53] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:13Z  ...  SELECT s.schemaname, s.relname AS table_name
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 99.85% cache hit
+   Sessions: 51/1000 total ⋅ 5 active ⋅ 46 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 12926 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 356 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+149    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+120    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+123    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+106    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+129    postgres           pgbench         postgres    172.26.0.5/32  0.000000
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 30ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 31ms/step
-[08/Sep/2024 10:33:53] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:39Z  ...  SELECT s.schemaname, s.relname AS table_name
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 36ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 36ms/step
-[08/Sep/2024 10:33:53] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                              query
-0  2024-09-08T10:09:26Z  ...  SELECT pg_advisory_unlock_all(); CLOSE ALL; UN...
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 31ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 31ms/step
-[08/Sep/2024 10:33:54] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                              query
-0  2024-09-08T10:09:06Z  ...  SELECT pg_advisory_unlock_all(); CLOSE ALL; UN...
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 26ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 26ms/step
-[08/Sep/2024 10:33:54] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-something happen in the file 
 
-[08/Sep/2024 10:34:15] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-Record: {'datetimeutc': '2024-09-08T10:09:15Z', 'pid': '596', 'database': 'postgres', 'appname': '', 'user': 'postgres', 'client': '172.25.0.7/32', 'cpu': 'N/A', 'memory': 'N/A', 'read': 'N/A', 'write': 'N/A', 'duration': '-0.000590', 'wait': 'Y', 'io_wait': 'N/A', 'state': 'active', 'query': 'SELECT * FROM pg_stat_activity;'}
-[08/Sep/2024 10:34:15] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:34:15] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Connection complete.
-[08/Sep/2024 10:34:15] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connected> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. 
-db-monitoring
-            datetimeutc  pid  ...   state                            query
-0  2024-09-08T10:09:15Z  596  ...  active  SELECT * FROM pg_stat_activity;
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step
-[08/Sep/2024 10:34:15] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-something happen in the file 
 
-[08/Sep/2024 10:34:23] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-something happen in the file 
 
-[08/Sep/2024 10:35:05] INFO - Processing new file: /app/ProducerConsumer/Pg_activity_Data/activities.csv
-[08/Sep/2024 10:35:22] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connected> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: Socket EVENT_READ without in-flight-requests
-[08/Sep/2024 10:35:22] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:22] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connected> [IPv4 ('172.25.0.3', 9093)]>: socket disconnected
-[08/Sep/2024 10:35:22] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connected> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: socket disconnected
-[08/Sep/2024 10:35:22] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:22] ERROR - Fetch to node 1001 failed: KafkaConnectionError: socket disconnected
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:22] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:22] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:22] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:22] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:22] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:22] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:22] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:22] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:22] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:22] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:22] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:22] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:22] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:22] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:22] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:22] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:22] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:22] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:22] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:22] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:22] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:22] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:22] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:22] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:22] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:22] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:23] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:23] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:23] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:23] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:23] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:23] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:23] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:23] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:23] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:23] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:24] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:24] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:24] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:24] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:24] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:24] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:24] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:24] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:24] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:24] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:24] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:24] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:24] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: connecting to kafka:9093 [('172.25.0.3', 9093) IPv4]
-[08/Sep/2024 10:35:24] ERROR - Connect attempt to <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]> returned error 111. Disconnecting.
-[08/Sep/2024 10:35:24] ERROR - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.3', 9093)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
-[08/Sep/2024 10:35:24] WARNING - Node 1001 connection failed -- refreshing metadata
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] WARNING - Got error produce response: NodeNotReadyError: Attempt to send a request to node which is not ready (node id 1001).
-[08/Sep/2024 10:35:24] ERROR - Unable connect to node with id 1001: [Errno 111] Connect call failed ('172.25.0.3', 9093)
-[08/Sep/2024 10:35:24] ERROR - Unable to update metadata from [1001]
-[08/Sep/2024 10:35:26] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:26] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:26] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:26] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:26] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:26] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:26] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:26] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:26] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:26] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:26] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:26] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:26] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:26] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:26] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:26] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:27] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:27] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:27] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:27] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:27] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:27] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:27] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:27] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:28] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:29] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:29] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:29] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:29] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:29] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:29] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:29] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:29] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:29] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:29] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:29] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:29] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:29] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:29] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:29] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:29] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:29] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:29] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:29] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:29] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:30] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:30] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:30] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:30] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:30] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:30] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:30] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:30] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:30] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:30] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:30] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:30] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:30] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:30] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:30] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:30] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:30] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:30] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:30] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:30] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:31] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:31] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:31] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:31] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:31] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:31] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:31] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:31] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:32] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:32] WARNING - DNS lookup failed for kafka:9093, exception was [Errno -3] Temporary failure in name resolution. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
-[08/Sep/2024 10:35:32] ERROR - DNS lookup failed for kafka:9093 (0)
-[08/Sep/2024 10:35:32] ERROR - DNS lookup failed for kafka:9093 (0)
-Producer started
-[08/Sep/2024 10:36:49] INFO - Starting data monitoring
-Consumer started
-Consumer_1 started
-[08/Sep/2024 10:36:49] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:36:49] INFO - Probing node bootstrap-0 broker version
-[08/Sep/2024 10:36:49] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Connection complete.
-[08/Sep/2024 10:36:49] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:36:49] INFO - Probing node bootstrap-0 broker version
-[08/Sep/2024 10:36:49] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Connection complete.
-[08/Sep/2024 10:36:49] INFO - Broker version identified as 2.6.0
-[08/Sep/2024 10:36:49] INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
-[08/Sep/2024 10:36:49] WARNING - group_id is None: disabling auto-commit.
-[08/Sep/2024 10:36:49] INFO - Updating subscribed topics to: ('db-monitoring',)
-[08/Sep/2024 10:36:49] INFO - Broker version identified as 2.6.0
-[08/Sep/2024 10:36:49] INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
-[08/Sep/2024 10:36:49] INFO - Starting query monitoring task
-[08/Sep/2024 10:36:49] INFO - Establishing database connection ....
-[08/Sep/2024 10:36:49] INFO - Establishing database connection ....
-[08/Sep/2024 10:36:49] INFO - Establishing database connection ....
-[08/Sep/2024 10:36:49] INFO - Establishing database connection ....
-[08/Sep/2024 10:36:49] INFO - ai_consumer started
 
-[08/Sep/2024 10:36:49] INFO - Updating subscribed topics to: frozenset({'query-monitoring'})
-[08/Sep/2024 10:36:49] INFO - Metadata for topic has changed from {} to {'query-monitoring': 1}. 
-Dash is running on http://0.0.0.0:8050/
 
-[08/Sep/2024 10:36:59] INFO - Dash is running on http://0.0.0.0:8050/
 
-[08/Sep/2024 10:36:59] INFO - Updated partition assignment: [TopicPartition(topic='db-monitoring', partition=0)]
-[08/Sep/2024 10:36:59] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: connecting to kafka:9093 [('172.25.0.5', 9093) IPv4]
-[08/Sep/2024 10:36:59] INFO - <BrokerConnection node_id=1001 host=kafka:9093 <connecting> [IPv4 ('172.25.0.5', 9093)]>: Connection complete.
-[08/Sep/2024 10:36:59] INFO - <BrokerConnection node_id=bootstrap-0 host=kafka:9093 <connected> [IPv4 ('172.25.0.5', 9093)]>: Closing connection. 
- * Serving Flask app 'ProducerConsumer.Consumer'
- * Debug mode: off
-[08/Sep/2024 10:36:59] INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:8050
- * Running on http://172.25.0.6:8050
-[08/Sep/2024 10:36:59] INFO - [33mPress CTRL+C to quit[0m
-db-monitoring
-            datetimeutc  ...                                              query
-0  2024-09-08T10:09:24Z  ...  SELECT backend_type, SUM(reads + writes + writ...
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 5 active ⋅ 46 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 10217 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+120    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+114    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+123    postgres           pgbench         postgres    172.26.0.5/32  0.000000
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 353ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 353ms/step
-[08/Sep/2024 10:37:00] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:44Z  ...  SELECT s.schemaname, s.relname AS table_name
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 24ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step
-[08/Sep/2024 10:37:00] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:48Z  ...  SELECT s.schemaname, s.relname AS table_name
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 28ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 29ms/step
-[08/Sep/2024 10:37:00] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:13Z  ...  SELECT s.schemaname, s.relname AS table_name
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 26ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 27ms/step
-[08/Sep/2024 10:37:01] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                         query
-0  2024-09-08T10:09:39Z  ...  SELECT s.schemaname, s.relname AS table_name
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 27ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 28ms/step
-[08/Sep/2024 10:37:01] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                              query
-0  2024-09-08T10:09:26Z  ...  SELECT pg_advisory_unlock_all(); CLOSE ALL; UN...
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step
-[08/Sep/2024 10:37:01] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  ...                                              query
-0  2024-09-08T10:09:06Z  ...  SELECT pg_advisory_unlock_all(); CLOSE ALL; UN...
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 36ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 36ms/step
-[08/Sep/2024 10:37:01] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-db-monitoring
-            datetimeutc  pid  ...   state                            query
-0  2024-09-08T10:09:15Z  596  ...  active  SELECT * FROM pg_stat_activity;
 
-[1 rows x 15 columns]
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 28ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 28ms/step
-[08/Sep/2024 10:37:01] ERROR - Error occurred while transforming data: Input X contains NaN.
-IsolationForest does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
-[08/Sep/2024 10:37:02] INFO - Database pool connection opened
-[08/Sep/2024 10:37:02] INFO -  i need this  :: Database pool connection opened
-[08/Sep/2024 10:37:02] INFO - Database pool connection opened
-[08/Sep/2024 10:37:02] INFO -  i need this  :: Database pool connection opened
-[08/Sep/2024 10:37:02] INFO - Database pool connection opened
-[08/Sep/2024 10:37:02] INFO -  i need this  :: Database pool connection opened
-[08/Sep/2024 10:37:02] INFO - Database pool connection opened
-[08/Sep/2024 10:37:02] INFO -  i need this  :: Database pool connection opened
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "GET / HTTP/1.1" 200 -
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "GET /_dash-component-suites/dash/deps/polyfill@7.v2_17_1m1725790905.12.1.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "GET /_dash-component-suites/dash/deps/react@16.v2_17_1m1725790905.14.0.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "GET /_dash-component-suites/dash/deps/prop-types@15.v2_17_1m1725790905.8.1.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "GET /_dash-component-suites/dash_bootstrap_components/_components/dash_bootstrap_components.v1_6_0m1725790946.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "GET /_dash-component-suites/dash/deps/react-dom@16.v2_17_1m1725790905.14.0.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "GET /_dash-component-suites/dash/dash-renderer/build/dash_renderer.v2_17_1m1725790905.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "GET /_dash-component-suites/dash/html/dash_html_components.v2_0_18m1725790905.min.js HTTP/1.1" 200 -
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "GET /_dash-component-suites/dash/dcc/dash_core_components.v2_14_1m1725790905.js HTTP/1.1" 200 -
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "GET /_dash-component-suites/dash/dash_table/bundle.v5_2_11m1725790905.js HTTP/1.1" 200 -
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "GET /_dash-component-suites/dash/dcc/dash_core_components-shared.v2_14_1m1725790905.js HTTP/1.1" 200 -
-[08/Sep/2024 10:38:25] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:25] "[36mGET /assets/styles.css?m=1725724017.423114 HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:38:28] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:28] "GET /_dash-layout HTTP/1.1" 200 -
-[08/Sep/2024 10:38:28] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:28] "GET /_dash-dependencies HTTP/1.1" 200 -
-[08/Sep/2024 10:38:29] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:29] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:38:39] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:39] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:38:49] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:49] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:38:58] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:58] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:38:59] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:59] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:38:59] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:59] "[36mGET /_dash-component-suites/dash/dcc/async-graph.js HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:38:59] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:59] "[36mGET /_dash-component-suites/dash/dcc/async-dropdown.js HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:38:59] INFO - 172.25.0.1 - - [08/Sep/2024 10:38:59] "[36mGET /_dash-component-suites/plotly/package_data/plotly.min.js HTTP/1.1[0m" 304 -
-[08/Sep/2024 10:39:08] INFO - 172.25.0.1 - - [08/Sep/2024 10:39:08] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:39:18] INFO - 172.25.0.1 - - [08/Sep/2024 10:39:18] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:39:28] INFO - 172.25.0.1 - - [08/Sep/2024 10:39:28] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:39:38] INFO - 172.25.0.1 - - [08/Sep/2024 10:39:38] "POST /_dash-update-component HTTP/1.1" 200 -
-[08/Sep/2024 10:39:48] INFO - 172.25.0.1 - - [08/Sep/2024 10:39:48] "POST /_dash-update-component HTTP/1.1" 200 -
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 4 active ⋅ 47 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 9848 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+127    postgres           pgbench         postgres    172.26.0.5/32  0.010047
+138    postgres           pgbench         postgres    172.26.0.5/32  0.004280
+153    postgres           pgbench         postgres    172.26.0.5/32  0.003474
+108    postgres           pgbench         postgres    172.26.0.5/32  0.003393
+152    postgres           pgbench         postgres    172.26.0.5/32  0.000567
+126    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+121    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 4 active ⋅ 47 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 7604 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+127    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+120    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+134    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+109    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+126    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+111    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+119    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+150    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+117    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 4 active ⋅ 47 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 8218 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+151    postgres           pgbench         postgres    172.26.0.5/32  0.029865
+122    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 4 active ⋅ 47 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 9383 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+129    postgres           pgbench         postgres    172.26.0.5/32  0.002385
+130    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+115    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+107    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+116    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+151    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+136    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+127    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 2 active ⋅ 49 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 9134 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+126    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+119    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+147    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 3 active ⋅ 48 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 11052 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+131    postgres           pgbench         postgres    172.26.0.5/32  0.002052
+114    postgres           pgbench         postgres    172.26.0.5/32  0.000233
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 4 active ⋅ 47 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 12274 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+148    postgres           pgbench         postgres    172.26.0.5/32  0.014810
+128    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+125    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 8 active ⋅ 43 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 13984 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+127    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+136    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+134    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 4 active ⋅ 47 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 13143 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+136    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+124    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+113    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 10 active ⋅ 41 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 11012 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+111    postgres           pgbench         postgres    172.26.0.5/32  0.000596
+129    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+118    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+150    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+144    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 7 active ⋅ 44 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 8716 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+114    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+121    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+127    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 99.99% cache hit
+   Sessions: 51/1000 total ⋅ 10 active ⋅ 41 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 9247 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 430 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+147    postgres           pgbench         postgres    172.26.0.5/32  0.004746
+138    postgres           pgbench         postgres    172.26.0.5/32  0.003755
+112    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+154    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+151    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+115    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+143    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+117    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+116    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+124    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 7 active ⋅ 44 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 9092 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+146    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+106    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+143    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+115    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+118    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 5 active ⋅ 46 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 10702 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+118    postgres           pgbench         postgres    172.26.0.5/32  0.002706
+145    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+135    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+140    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+115    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 2 active ⋅ 49 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 12222 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+123    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+118    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+137    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+108    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 3 active ⋅ 48 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 12773 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+108    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+154    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+143    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+122    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+126    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+151    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+133    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+139    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 7 active ⋅ 44 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 11074 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+154    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+111    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 16 active ⋅ 35 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 11850 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+122    postgres           pgbench         postgres    172.26.0.5/32  0.007970
+108    postgres           pgbench         postgres    172.26.0.5/32  0.007151
+140    postgres           pgbench         postgres    172.26.0.5/32  0.005328
+111    postgres           pgbench         postgres    172.26.0.5/32  0.004904
+139    postgres           pgbench         postgres    172.26.0.5/32  0.002064
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 7 active ⋅ 44 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 6367 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+116    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+129    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+115    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+142    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+117    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+128    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 10 active ⋅ 41 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 6151 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+134    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+120    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+123    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+141    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+145    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 51/1000 total ⋅ 6 active ⋅ 45 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 6262 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 0 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+137    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+109    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+139    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+131    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+152    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 54/1000 total ⋅ 5 active ⋅ 49 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 10900 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 20 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+125    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+148    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 58/1000 total ⋅ 5 active ⋅ 53 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 9420 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 27 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+113    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+135    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+110    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+154    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 1 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 71/1000 total ⋅ 4 active ⋅ 67 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 11619 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 81 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+108    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+114    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 80/1000 total ⋅ 3 active ⋅ 77 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 12045 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 63 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+109    postgres           pgbench         postgres    172.26.0.5/32  0.013162
+134    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+146    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+136    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 90/1000 total ⋅ 7 active ⋅ 83 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 11652 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 67 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+126    postgres           pgbench         postgres    172.26.0.5/32  0.010132
+146    postgres           pgbench         postgres    172.26.0.5/32  0.006299
+138    postgres           pgbench         postgres    172.26.0.5/32  0.000283
+113    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+133    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 101/1000 total ⋅ 5 active ⋅ 96 idle ⋅ 0 idle in txn ⋅ 0 idle in txn
+   Activity: 10250 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 69 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+135    postgres           pgbench         postgres    172.26.0.5/32  0.009759
+140    postgres           pgbench         postgres    172.26.0.5/32  0.007900
+130    postgres           pgbench         postgres    172.26.0.5/32  0.002577
+136    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+115    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+119    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 109/1000 total ⋅ 9 active ⋅ 100 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 10359 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 48 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 116/1000 total ⋅ 7 active ⋅ 109 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 7295 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 44 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+135    postgres           pgbench         postgres    172.26.0.5/32  0.004055
+123    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+109    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 125/1000 total ⋅ 5 active ⋅ 120 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 9967 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 69 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 136/1000 total ⋅ 2 active ⋅ 134 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 11986 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 72 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+129    postgres           pgbench         postgres    172.26.0.5/32  0.002042
+145    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+120    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+109    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+108    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 146/1000 total ⋅ 8 active ⋅ 138 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 12696 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 69 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+148    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+152    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+151    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+112    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+130    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+139    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+109    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+136    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 154/1000 total ⋅ 9 active ⋅ 145 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 10363 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 54 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 114/1000 total ⋅ 1 active ⋅ 113 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 9607 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 67 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 163/1000 total ⋅ 1 active ⋅ 162 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 29 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 365 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 188/1000 total ⋅ 4 active ⋅ 184 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 4281 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 2731 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+480    postgres           pgbench         postgres    172.26.0.5/32  0.000149
+466    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 196/1000 total ⋅ 8 active ⋅ 188 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 6900 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 56 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+467    postgres           pgbench         postgres    172.26.0.5/32  0.003931
+465    postgres           pgbench         postgres    172.26.0.5/32  0.003802
+436    postgres           pgbench         postgres    172.26.0.5/32  0.000599
+449    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+459    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+479    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+458    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 203/1000 total ⋅ 3 active ⋅ 200 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 6669 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 49 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+478    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+473    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+464    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+F1/1 Running F2/2 Waiting F3/3 Blockin Space Pause/ q Quit       h Help         PostgreSQL 16.4 - c44d57395c2c - postgres@postgresql_db:5432/postgres - Ref.: 2s
+ * Global: 2 minutes uptime ⋅ 21.84M dbs size - 0B/s growth ⋅ 100.00% cache hit
+   Sessions: 212/1000 total ⋅ 4 active ⋅ 208 idle ⋅ 0 idle in txn ⋅ 0 idle in
+   Activity: 6574 tps ⋅ 0 insert/s ⋅ 0 update/s ⋅ 0 delete/s ⋅ 435 tuples
+ * Worker processes: 0/8 total ⋅ 0/4 logical workers ⋅ 0/8 parallel workers
+   Other processes & info: 0/3 autovacuum workers ⋅ 0/16 wal senders ⋅ 0 wal
+                                RUNNING QUERIES
+PID    DATABASE               APP             USER           CLIENT     TIME+
+432    postgres           pgbench         postgres    172.26.0.5/32  0.015241
+437    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+470    postgres           pgbench         postgres    172.26.0.5/32  0.000000
+
+
+
+
+
+
+
+
+
+
+
+
+
