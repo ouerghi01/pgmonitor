@@ -1,5 +1,7 @@
 # Use the official Python 3.11 slim image as a base
 FROM python:3.11-slim
+EXPOSE 8050
+
 
 # Set the working directory in the container
 WORKDIR /app
@@ -16,7 +18,7 @@ COPY . .
 RUN python3 -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 RUN pip install docker==7.1.0
-
+RUN pip install  python-dotenv
 # Download NLTK data
 RUN python -m nltk.downloader vader_lexicon
 

@@ -1,17 +1,17 @@
 import subprocess
 from kafka import KafkaProducer
-import logger
+import logger # type: ignore
 from datetime import datetime
-import asyncpg
+import asyncpg # type: ignore
 import asyncio
-import logging
-import docker
+import logging # type: ignore
+import docker # type: ignore
 import csv
 import random
 import json
 import os
 from concurrent.futures import ThreadPoolExecutor
-from aiokafka import AIOKafkaProducer
+from aiokafka import AIOKafkaProducer # type: ignore
 import time
 from multiprocessing import Event, Process, Manager,Queue
 from watchdog.observers import Observer
@@ -24,13 +24,7 @@ class QueryTracker:
     _instance = None
     _connection_pool = None
     _ssh_tunnel = None
-    db_params = {
-    'database': "postgres",
-    'user': "postgres",
-    'password': "postgres",
-    'host': 'postgresql_db',  # Host matches the service name in Docker Compose
-    'port': '5432',  # Matches the exposed port
-    } 
+    db_params = {}
     # SSH and database credentials
     #ssh_host = "192.168.1.1"
     #ssh_port = 22
@@ -72,7 +66,7 @@ class QueryTracker:
     async def setup(self):
         if not self.initialized:
             self.ai_producer = AIOKafkaProducer(
-            bootstrap_servers='kafka:9092',  # Use the Kafka service name and port exposed to other services
+            bootstrap_servers='kafka:9093',  # Use the Kafka service name and port exposed to other services
             value_serializer=lambda v: json.dumps(v, default=str).encode('utf-8')           
             )
             await self.ai_producer.start()
@@ -81,21 +75,22 @@ class QueryTracker:
     async def establish_connection(cls):
         if not cls._connection_pool:
            try:
-              # cls.ssh_tunnel = SSHTunnelForwarder(
-              #   (cls.ssh_host, cls.ssh_port),
-              #   ssh_username=cls.ssh_username,
-              #   ssh_pkey=cls.ssh_key_file,
-              #   remote_bind_address=('localhost', 5432),
-              #   local_bind_address=('127.0.0.1', 5433)
-              # )
-              
-              #cls._ssh_tunnel.start()
+              cls.db_params={
+                 'database': "postgres",
+                 'user': "postgres",
+                 'password': "postgres",
+                 'host': 'postgresql_db',  # Host matches the service name in Docker Compose
+                 'port': '5432',  # Matches the exposed port
+   
+              }
+             
               try:
                 cls._connection_pool = await asyncpg.create_pool(
                     **cls.db_params,
                     max_size=100,
                     min_size=50
                 )
+                logging.info("Database pool connection opened")
               except Exception as e:
                 logger.exception("Error establishing database connection pool: %s", e)
                 raise
@@ -105,6 +100,7 @@ class QueryTracker:
         return cls._connection_pool
     async def run_query(self, query):
         if not self._connection_pool:
+            logging.info("Establishing database connection ....")
             await self.establish_connection()
         query_type, query_string = query        
         try:
@@ -160,9 +156,8 @@ class Handler(PatternMatchingEventHandler):
             logger.error("Error occurred while creating Kafka producer: %s", str(e))
             raise
         self.event_stop = event_stop
-        self.temp_filename_csv = r"ProducerConsumer/Pg_activity_Data/activities.csv"
+        self.temp_filename_csv = r"/app/ProducerConsumer/Pg_activity_Data/activities.csv"
         self.last_position = 0
-        self.docker_client = docker.from_env()
         self.skip_header = False
         super().__init__()
     def on_modified(self, event) -> None:
@@ -171,6 +166,7 @@ class Handler(PatternMatchingEventHandler):
             self.process_event(event)
        
     def process_event(self, event):
+        logger.info("Processing new file: %s", event.src_path)
         try:
             # Open the file and read from the last position
             with open(event.src_path, 'r') as file_content:
@@ -210,6 +206,7 @@ class Handler(PatternMatchingEventHandler):
                         "state": parts[13].strip('"'),
                         "query": ";".join(parts[14:]).strip('"'),
                     }
+                    print(f"Record: {record}")
                     self.producer.send(
                         topic='db-monitoring', 
                         key=f"{random.randrange(999)}".encode(), 
@@ -235,6 +232,7 @@ def start_query_monitoring(event_stop):
     logger.info("Starting query monitoring task")
     asyncio.run(query_monitoring_task(event_stop))
 def Producer_Data_Monitoring(event_stop, temp_filename):
+    logger.info("Starting data monitoring")
     process_query_monitoring = Process(target=start_query_monitoring, args=(event_stop,))
     event_handler = Handler(event_stop)
     observer = watchdog.observers.Observer()

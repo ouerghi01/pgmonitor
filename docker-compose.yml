@@ -11,12 +11,18 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
     networks:
       - app_network
+    healthcheck:
+      test: ["CMD", "bash", "-c", "unset" , "JMX_PORT" ,";" ,"kafka-topics.sh","--zookeeper","zookeeper:2181","--list"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
 
   kafka:
     image: docker.io/bitnami/kafka:3.8
     ports:
-      - "9092:9092"  
-      - "9093:9093"  
+      - "9092:9092"
+      - "9093:9093"
     volumes:
       - "kafka_data:/bitnami"
     environment:
@@ -28,31 +34,40 @@ services:
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
       - KAFKA_CREATE_TOPICS="db-monitoring:1:1,query-monitoring:1:1"
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list"]
+      interval: 10s
+      retries: 5
+      
+    restart: always
     networks:
       - app_network
+
   pg_activity:
     image: tophfr/pg_activity:${TAG}
-    build: 
+    build:
       context: pg_activity
       dockerfile: Dockerfile
       args:
-        PG_ACTIVITY_VERSION: ${VERSION}  # Fixed the syntax for passing ARG
-    environment: &pgenv
+        PG_ACTIVITY_VERSION: ${VERSION}
+    environment:
       PGHOST: postgresql_db
       PGPORT: 5432
       PGUSER: postgres
       PGPASSWORD: postgres
       PGDATABASE: postgres
     volumes:
-      - "Pg_activity_Data:/app/ProducerConsumer/Pg_activity_Data"  # Make sure directory path case matches your Dockerfile
+      - "Pg_activity_Data:/app/ProducerConsumer/Pg_activity_Data"
     networks:
       - app_network
-    depends_on:
-      postgresql_db:
-        condition: service_healthy # Wait for PostgreSQL to be healthy before starting pg_activity
+    logging:
+      driver: none
+
   stress_tester:
-    build: ProducerConsumer/ActivityWatcher
+    build:
+      context: ProducerConsumer/ActivityWatcher
     depends_on:
       postgresql_db:
         condition: service_healthy
@@ -61,26 +76,29 @@ services:
       PORT: 5432
       USER: postgres
       DBNAME: postgres
-      CONNECTIONS: 50       
-      DURATION: 100         
-      DELETE_CONNECTIONS: 1 
-      DELETE_DURATION: 1    
-      PGPASSWORD: postgres  
+      CONNECTIONS: 50
+      DURATION: 100
+      DELETE_CONNECTIONS: 1
+      DELETE_DURATION: 1
+      PGPASSWORD: postgres
+    logging:
+      driver: none
     restart: always
     networks:
       - app_network
-    
+
   postgresql_db:
     image: docker.io/bitnami/postgresql:16
-    environment: 
+    environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
+      - POSTGRESQL_MAX_CONNECTIONS=1000
+      
     ports:
-      - "5432:5432"  # Expose PostgreSQL on TCP port 5432
+      - "5432:5432"
     volumes:
       - "postgresql_data:/bitnami"
-  
     networks:
       - app_network
     healthcheck:
@@ -89,23 +107,33 @@ services:
       retries: 5
       start_period: 30s
       timeout: 5s
+    command: >
+      bash -c "
+      docker-entrypoint.sh postgres &
+      sleep 5 &&
+      psql -U postgres -c 'ALTER USER postgres WITH SUPERUSER;' &&
+      wait
+      "
 
-
-    
   python_app:
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+      - "8050:8050"
     volumes:
-      - .:/app  # Mount current directory to /app in the container
+      - .:/app
       - /var/run/docker.sock:/var/run/docker.sock
-      - "Pg_activity_Data:/app/ProducerConsumer/Pg_activity_Data"  # Use same volume for consistency
+      - "Pg_activity_Data:/app/ProducerConsumer/Pg_activity_Data"
     depends_on:
-      - kafka
-      - postgresql_db
-      - pg_activity
+      kafka:
+        condition: service_healthy
+      postgresql_db:
+        condition: service_healthy
+      pg_activity:
+        condition: service_started
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9093  # Internal Docker network port
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9093
       - KAFKA_TOPIC=events
       - POSTGRESQL_HOST=postgresql_db
       - POSTGRESQL_PORT=5432
@@ -128,4 +156,5 @@ volumes:
     driver: local
   Pg_activity_Data:
     driver: local
+
   

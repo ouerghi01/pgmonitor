@@ -6,7 +6,7 @@ HOST=${HOST:-'postgresql_db'}
 PORT=${PORT:-'5432'}
 USER=${USER:-'postgres'}
 DBNAME=${DBNAME:-'postgres'}
-CONNECTIONS=${CONNECTIONS:-'99'}
+CONNECTIONS=${CONNECTIONS:-'50'}
 DURATION=${DURATION:-'100'}
 DELETE_CONNECTIONS=${DELETE_CONNECTIONS:-'1'}
 DELETE_DURATION=${DELETE_DURATION:-'1'}
@@ -34,7 +34,7 @@ done
 # Run pgbench commands
 #run_pgbench "/app/init_custom_pgbench.sql" "$CONNECTIONS" "$DURATION"
 run_pgbench "/app/select_custom_pgbench.sql" "$CONNECTIONS" "$DURATION"
-run_pgbench "/app/delete_custom_pgbench.sql" "$DELETE_CONNECTIONS" "$DELETE_DURATION"
+#run_pgbench "/app/delete_custom_pgbench.sql" "$DELETE_CONNECTIONS" "$DELETE_DURATION"
 
 # Clean up
 unset PGPASSWORD

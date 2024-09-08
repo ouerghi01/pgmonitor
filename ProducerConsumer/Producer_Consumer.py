@@ -8,7 +8,7 @@ def consumer(event_stop):
 filename=None 
 def producer(event_stop):
     global filename  
-    filename = r"./ProducerConsumer/Pg_activity_Data/"
+    filename = r"/app/ProducerConsumer/Pg_activity_Data/"
     print('Producer started')
     def run_producer(event_stop):
             try:

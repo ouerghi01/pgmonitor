@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from dash  import Dash , dcc , html,dash_table,callback,Output,Input 
 import tensorflow.keras.backend as K # type: ignore
 
-from aiokafka import AIOKafkaConsumer
+from aiokafka import AIOKafkaConsumer #type: ignore
 import re 
 import asyncio
 import os
@@ -11,7 +11,7 @@ os.environ['PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT'] = '10'  # Increase timeout to 1 s
 
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-import dash_bootstrap_components as dbc
+import dash_bootstrap_components as dbc # type: ignore
 import threading
 import plotly.express as px
 from kafka import KafkaConsumer
@@ -119,6 +119,7 @@ class ConsumerVisualizer:
               for _, msgs in messages.items():
                   for message in msgs:
                      topic=message.topic
+                     print(topic)
                      func_dict={"db-monitoring":self.handle_anomaly}
                      func_dict[topic](message)
 
@@ -837,7 +838,7 @@ class ConsumerVisualizer:
                 raise e
         with self.data_lock :
 
-            self.app.run_server(debug=False)
+            self.app.run_server(host='0.0.0.0',port=8050,debug=False)
          
     def Consumer_Data_Monitoring(self):
         asyncio.run(self.async_tasks())
