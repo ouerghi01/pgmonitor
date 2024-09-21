@@ -176,6 +176,7 @@ class ConsumerVisualizer:
     def handle_anomaly(self, message):
         data = message.value 
         row=pd.DataFrame([data])
+        row = row.fillna(np.random.randint(0, 100, size=row.shape[1]))
         print(row)
         row_activity = row.copy()
         future=self.thread_pool.submit(self.pipeline.final_prediction,self.transform_row_data(row))
