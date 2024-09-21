@@ -1,5 +1,6 @@
 import subprocess
 from kafka import KafkaProducer
+import random
 import logger # type: ignore
 from datetime import datetime
 import asyncpg # type: ignore
@@ -190,22 +191,23 @@ class Handler(PatternMatchingEventHandler):
                 parts = last_line.split(";")
                 if len(parts) >= 14:
                     record = {
-                        "datetimeutc": parts[0].strip('"'),
-                        "pid": parts[1].strip('"'),
-                        "database": parts[2].strip('"'),
-                        "appname": parts[3].strip('"'),
-                        "user": parts[4].strip('"'),
-                        "client": parts[5].strip('"'),
-                        "cpu": parts[6].strip('"'),
-                        "memory": parts[7].strip('"'),
-                        "read": parts[8].strip('"'),
-                        "write": parts[9].strip('"'),
-                        "duration": parts[10].strip('"'),
-                        "wait": parts[11].strip('"'),
-                        "io_wait": parts[12].strip('"'),
-                        "state": parts[13].strip('"'),
-                        "query": ";".join(parts[14:]).strip('"'),
-                    }
+    "datetimeutc": parts[0].strip('"'),
+    "pid": parts[1].strip('"'),
+    "database": parts[2].strip('"'),
+    "appname": parts[3].strip('"'),
+    "user": parts[4].strip('"'),
+    "client": parts[5].strip('"'),
+    # Fill with random values
+    "cpu": str(random.uniform(0.0, 100.0)),   # Random CPU percentage between 0 and 100
+    "memory": str(random.uniform(0.0, 100.0)),  # Random Memory usage between 0 and 100
+    "read": str(random.uniform(0.0, 1000.0)),   # Random Read I/O between 0 and 1000
+    "write": str(random.uniform(0.0, 1000.0)),  # Random Write I/O between 0 and 1000
+    "duration": str(random.uniform(0.0, 10.0)), # Random Duration in seconds
+    "wait": str(random.uniform(0.0, 5.0)),      # Random Wait time in seconds
+    "io_wait": str(random.uniform(0.0, 5.0)),   # Random I/O wait time in seconds
+    "state": parts[13].strip('"'),
+    "query": ";".join(parts[14:]).strip('"'),
+}
                     print(f"Record: {record}")
                     self.producer.send(
                         topic='db-monitoring', 

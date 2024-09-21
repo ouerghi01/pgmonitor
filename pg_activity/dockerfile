@@ -29,4 +29,3 @@ RUN echo "postgres ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Use ENTRYPOINT to run pg_activity as the postgres user
 ENTRYPOINT ["pg_activity", "--output=/app/ProducerConsumer/Pg_activity_Data/activities.csv", "-U", "postgres"]
-dock
