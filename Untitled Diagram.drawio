@@ -1,84 +1,61 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0" version="24.7.17">
-  <diagram name="Page-1" id="rW8nN5qOR4zYZWIj6nrv">
+  <diagram name="Page-1" id="pCuE07Tvt33tu6db_Riq">
     <mxGraphModel>
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="2" value="Threads" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry x="8" y="79" width="449" height="110" as="geometry" />
+        <mxCell id="2" value="Architecture" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="8" y="8" width="1052" height="398" as="geometry" />
         </mxCell>
-        <mxCell id="3" value="Consumer Threads" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
-          <mxGeometry x="43" y="46" width="169" height="35" as="geometry" />
+        <mxCell id="3" value="Producer Thread 1" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
+          <mxGeometry x="63" y="282" width="193" height="49" as="geometry" />
         </mxCell>
-        <mxCell id="4" value="Producer Threads" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
-          <mxGeometry x="262" y="46" width="160" height="35" as="geometry" />
+        <mxCell id="4" value="Threads" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
+          <mxGeometry x="28" y="245" width="1012" height="124" as="geometry" />
         </mxCell>
-        <mxCell id="5" value="Processes" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
-          <mxGeometry x="452" y="309" width="1200" height="295" as="geometry" />
+        <mxCell id="5" value="Producer Process" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
+          <mxGeometry x="188" y="83" width="187" height="49" as="geometry" />
         </mxCell>
-        <mxCell id="6" value="Consumer Process" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
-          <mxGeometry x="472" y="334" width="440" height="245" as="geometry" />
+        <mxCell id="6" value="Producer Thread 2" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
+          <mxGeometry x="306" y="282" width="193" height="49" as="geometry" />
         </mxCell>
-        <mxCell id="7" value="Producer Process" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
-          <mxGeometry x="932" y="334" width="700" height="245" as="geometry" />
+        <mxCell id="7" value="Consumer Process" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
+          <mxGeometry x="679" y="83" width="196" height="49" as="geometry" />
         </mxCell>
-        <mxCell id="8" value="Architecture" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
-          <mxGeometry x="492" y="8" width="1083" height="251" as="geometry" />
+        <mxCell id="8" value="Consumer Thread 1" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
+          <mxGeometry x="550" y="282" width="202" height="49" as="geometry" />
         </mxCell>
-        <mxCell id="9" value="Producer-Consumer Model" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
-          <mxGeometry x="512" y="33" width="1043" height="201" as="geometry" />
+        <mxCell id="9" value="Consumer Thread 2" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
+          <mxGeometry x="802" y="282" width="202" height="49" as="geometry" />
         </mxCell>
-        <mxCell id="10" value="Producer Process" style="ellipse;aspect=fixed;strokeWidth=2;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1207" y="62" width="142" height="142" as="geometry" />
+        <mxCell id="10" value="Producer_Consumer_Model" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
+          <mxGeometry x="75" y="46" width="904" height="124" as="geometry" />
         </mxCell>
-        <mxCell id="11" value="Consumer Process" style="ellipse;aspect=fixed;strokeWidth=2;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="617" y="58" width="151" height="151" as="geometry" />
-        </mxCell>
-        <mxCell id="12" value="Database Query Thread" style="ellipse;aspect=fixed;strokeWidth=2;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="967" y="363" width="187" height="187" as="geometry" />
-        </mxCell>
-        <mxCell id="13" value="Websocket Thread" style="ellipse;aspect=fixed;strokeWidth=2;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1204" y="382" width="149" height="149" as="geometry" />
-        </mxCell>
-        <mxCell id="14" value="Event Processing Thread" style="ellipse;aspect=fixed;strokeWidth=2;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1403" y="359" width="195" height="195" as="geometry" />
-        </mxCell>
-        <mxCell id="15" value="Data Transformation Thread" style="ellipse;aspect=fixed;strokeWidth=2;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="507" y="376" width="160" height="160" as="geometry" />
-        </mxCell>
-        <mxCell id="16" value="Visualization Thread" style="ellipse;aspect=fixed;strokeWidth=2;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="717" y="377" width="160" height="160" as="geometry" />
-        </mxCell>
-        <mxCell id="17" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.73;entryX=0.5;entryY=0;" edge="1" parent="1" source="10" target="12">
+        <mxCell id="11" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.24;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="2" source="5" target="3">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="1060" y="234" />
+              <mxPoint x="160" y="170" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="18" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="10" target="13">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="19" value="" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.73;entryX=0.5;entryY=0;" edge="1" parent="1" source="10" target="14">
+        <mxCell id="12" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.76;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="2" source="5" target="6">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="1500" y="234" />
+              <mxPoint x="403" y="170" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="20" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.98;entryX=0.5;entryY=0;" edge="1" parent="1" source="11" target="15">
+        <mxCell id="13" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.25;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="2" source="7" target="8">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="587" y="234" />
+              <mxPoint x="651" y="170" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="21" value="" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.98;entryX=0.5;entryY=0;" edge="1" parent="1" source="11" target="16">
+        <mxCell id="14" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.76;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="2" source="7" target="9">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="797" y="234" />
+              <mxPoint x="903" y="170" />
             </Array>
           </mxGeometry>
         </mxCell>
